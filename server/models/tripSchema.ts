@@ -17,6 +17,7 @@ export interface isTrip extends Document {
   endDate: Date;
   users: isUser['_id'][];
   creator: isUser['_id'];
+  name: string;
 };
 
 const TripSchema: Schema = new Schema ({
@@ -47,6 +48,10 @@ const TripSchema: Schema = new Schema ({
   creator: {
     type: Schema.Types.ObjectId,
     ref: 'User',
+    required: true,
+  },
+  name: {
+    type: String,
     required: true,
   },
 });
