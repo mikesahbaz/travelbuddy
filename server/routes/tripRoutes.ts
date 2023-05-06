@@ -4,8 +4,8 @@ const router = express.Router();
 import { createTrip, getAllTripsByUserId, getTripByTripId, getAllUsersByTripId, deleteTrip} from '../controllers/tripController';
 
 router.post('/create', createTrip);
-router.get('/tripsbyuser/:userId', getAllTripsByUserId);
-router.get('/tripsbytrip/:tripId', getTripByTripId);
+router.get('/mytrips/:userId', getAllTripsByUserId);
+router.get('/trip/:tripId', getTripByTripId);
 router.get('/users/:tripId', getAllUsersByTripId);
 router.delete('/delete/:tripId', deleteTrip);
 

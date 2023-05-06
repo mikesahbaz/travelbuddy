@@ -14,6 +14,13 @@ export const createTrip = async (req: Request, res: Response): Promise<void> => 
     })
     await trip.save();
     console.log('Trip succesfully created');
+    trip.users.forEach( async (userId) => {
+      const thisUser: isUser | null = await User.findById(userId);
+      if (thisUser) {
+        thisUser.trips.push(trip._id);
+        await thisUser.save();
+      }
+    });
     res.status(201).send({ trip });
   } catch (error) {
     console.error('Error in createTrip controller', error);
@@ -39,7 +46,7 @@ export const getAllTripsByUserId = async (req: Request, res: Response): Promise<
 export const getTripByTripId = async (req: Request, res: Response): Promise<void> => {
   try {
     const tripId = req.params.tripId;
-    const trip: isTrip | null = await Trip.findOne({ id: tripId});
+    const trip: isTrip | null = await Trip.findOne({ _id: tripId});
     console.log(trip);
     console.log('Trip was found by Trip ID succesfully');
     if (trip) {
@@ -58,9 +65,10 @@ export const getTripByTripId = async (req: Request, res: Response): Promise<void
 export const getAllUsersByTripId = async (req: Request, res: Response): Promise<void> => {
   try {
     const tripId = req.params.tripId;
-    const users: isUser[] = await User.find({ trips: tripId });
+    const tripUsers = await Trip.findOne({ _id: tripId }).populate('users');
     console.log('Users found by Trip Id successfully');
-    res.status(200).send({ users });
+
+    res.status(200).send({ tripUsers });
   } catch (error) {
     console.error('Error in getAllUsersByTripId', error);
     res.status(500).send({ message: 'Could not get all users '});

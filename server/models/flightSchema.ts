@@ -3,9 +3,9 @@ import { Document, Schema } from 'mongoose';
 
 export interface isFlight extends Document {
   itineraryId: string;
-  entityId: string;
-  lng: string;
-  lat: string;
+  entityId?: string;
+  lng?: string;
+  lat?: string;
 }
 
 const FlightSchema: Schema = new Schema ({
