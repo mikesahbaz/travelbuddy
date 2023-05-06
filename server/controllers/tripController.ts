@@ -39,7 +39,8 @@ export const getAllTripsByUserId = async (req: Request, res: Response): Promise<
 export const getTripByTripId = async (req: Request, res: Response): Promise<void> => {
   try {
     const tripId = req.params.tripId;
-    const trip: isTrip | null = await Trip.findById(tripId);
+    const trip: isTrip | null = await Trip.findOne({ id: tripId});
+    console.log(trip);
     console.log('Trip was found by Trip ID succesfully');
     if (trip) {
       res.status(200).send({ trip });
