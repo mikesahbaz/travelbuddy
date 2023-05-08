@@ -5,10 +5,10 @@ import { auth, createUserWithEmailAndPassword } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 
 const RegisterPage: React.FC = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
 
   const resetForm = () => {
@@ -44,7 +44,6 @@ const RegisterPage: React.FC = () => {
       .then(data => {
         resetForm();
         navigate('/login');
-        console.log(data.message);
       })
       .catch(error => console.error(error));
   }
