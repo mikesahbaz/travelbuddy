@@ -7,7 +7,7 @@ export const createTrip = async (req: Request, res: Response): Promise<void> => 
   try {
     const userEmails = req.body.users;
     const userIds: string[] = await Promise.all(
-      userEmails.map(async (user: string) => { // mapping over the user emails to get their IDs
+      userEmails.map( async (user: string) => { // mapping over the user emails to get their IDs
         const userFound: any = await User.findOne({ email: user });
         return userFound._id;
       })
@@ -102,5 +102,3 @@ export const deleteTrip = async (req: Request, res: Response): Promise<void> => 
 }
 
 
-
-// Update Trip (PUT)

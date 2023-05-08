@@ -26,11 +26,11 @@ if (!user) {
 
 
 // Get all users (GET) to display in createTrip selector
-export const getAllUsers = async (res: Response): Promise<void> => {
+export const getAllUsers = async (_req: Request, res: Response): Promise<void> => {
   const users = await User.find();
   if (users) {
     try {
-      res.status(200).send({ users });
+      res.status(200).json({ users });
     } catch (error) {
       console.error('error in getAllUsers' ,error);
       res.status(500).send({ error, message: 'Could not get all users' });
