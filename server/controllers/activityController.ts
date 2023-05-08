@@ -1,24 +1,21 @@
 import { Request, Response } from 'express';
 import Trip, { isTrip } from '../models/tripSchema';
 //import User, { isUser } from '../models/userSchema';
-import Flight, { isFlight } from '../models/flightSchema';
+import Activity, { isActivity } from '../models/activitySchema';
 
-// favoriteFlight (PUT)
-
-export const addFavoriteFlightToTrip = async (req: Request, res: Response): Promise<void> => {
+export const addFavoriteActivityToTrip = async (req: Request, res: Response): Promise<void> => {
   try {
     const tripId = req.params.tripId;
-    const flightData: isFlight = req.body;
+    const activityData: isActivity = req.body;
     const trip: isTrip | null = await Trip.findOne({ _id: tripId });
-    const flight: isFlight = new Flight(flightData);
+    const activity: isActivity = new Activity(activityData);
     if (trip) {
-      trip.flights.push(flight);
+      trip.activities.push(activity);
       await trip.save();
     }
     res.status(200).send({ trip });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: 'Error in addFavoriteFlightToTrip'});
+    res.status(500).send({ message: 'Error in addFavoriteActivityToTrip'});
   }
 }
-

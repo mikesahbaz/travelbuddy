@@ -1,24 +1,21 @@
 import { Request, Response } from 'express';
 import Trip, { isTrip } from '../models/tripSchema';
 //import User, { isUser } from '../models/userSchema';
-import Flight, { isFlight } from '../models/flightSchema';
+import Airbnb, { isAirbnb } from '../models/airbnbSchema';
 
-// favoriteFlight (PUT)
-
-export const addFavoriteFlightToTrip = async (req: Request, res: Response): Promise<void> => {
+export const addFavoriteAirbnbToTrip = async (req: Request, res: Response): Promise<void> => {
   try {
     const tripId = req.params.tripId;
-    const flightData: isFlight = req.body;
+    const airbnbData: isAirbnb = req.body;
     const trip: isTrip | null = await Trip.findOne({ _id: tripId });
-    const flight: isFlight = new Flight(flightData);
+    const stay: isAirbnb = new Airbnb(airbnbData);
     if (trip) {
-      trip.flights.push(flight);
+      trip.stays.push(stay);
       await trip.save();
     }
     res.status(200).send({ trip });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: 'Error in addFavoriteFlightToTrip'});
+    res.status(500).send({ message: 'Error in addFavoriteAirbnbToTrip'});
   }
 }
-

@@ -26,7 +26,7 @@ if (!user) {
 
 
 // Get all users (GET) to display in createTrip selector
-export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+export const getAllUsers = async (res: Response): Promise<void> => {
   const users = await User.find();
   if (users) {
     try {
