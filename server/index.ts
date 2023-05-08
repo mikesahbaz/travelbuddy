@@ -1,8 +1,8 @@
 import express, { Express } from 'express';
-import dotenv from 'dotenv';
+//import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes';
 import tripRoutes from './routes/tripRoutes';
-import cors from 'cors';
+//import cors from 'cors';
 
 require('dotenv').config();
 

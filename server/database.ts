@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+//import dotenv from 'dotenv';
 require('dotenv').config();
 
 const uri = process.env.MONGO_URI || '';

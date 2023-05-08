@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Trip, { isTrip } from '../models/tripSchema';
-import User, { isUser } from '../models/userSchema';
+//import User, { isUser } from '../models/userSchema';
 import Flight, { isFlight } from '../models/flightSchema';
 
 // favoriteFlight (PUT)
