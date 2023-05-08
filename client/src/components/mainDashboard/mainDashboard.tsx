@@ -11,6 +11,7 @@ const MainDashboard: React.FC = () => {
   const [userLoaded, setUserLoaded] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>('');
   const [trips, setTrips] = useState<isTrip[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged( (user) => {
@@ -40,6 +41,10 @@ const MainDashboard: React.FC = () => {
     }
   }
 
+  const handleCreateTripClick = () => {
+    navigate('/createTrip');
+  }
+
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
     return `${date.toLocaleString('en-US', { month: 'long' })} ${date.getDate()}, ${date.getFullYear()}`
@@ -53,12 +58,12 @@ const MainDashboard: React.FC = () => {
     <div>
       <NavBar/>
       <div className='main-dashboard-container'>
-      {user && user.email ? <h1>Welcome back, {user.email}</h1> : <p>Please Sign In</p>}
+      {user && user.email ? <h1 className='welcome-message'>Welcome back, {user.email}</h1> : <p className='no-user-message'>Please Sign In</p>}
         <div className='info-container'>
           <div className='my-trips'>
             My Trips
           </div>
-          <button className='create-trip-btn'>Plan a trip</button>
+          <button className='create-trip-btn' onClick={handleCreateTripClick}>Plan a trip</button>
         </div>
         {trips && trips.map( (trip) => (
           <div key={trip._id} className='trip-item' >
