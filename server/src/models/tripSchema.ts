@@ -1,12 +1,12 @@
 import db from '../database';
 import { Document, Schema } from 'mongoose';
-import { isFlight } from '../models/flightSchema';
-import { isAirbnb } from '../models/airbnbSchema';
-import { isActivity } from '../models/activitySchema';
+import { isFlight } from './flightSchema';
+import { isAirbnb } from './airbnbSchema';
+import { isActivity } from './activitySchema';
 import { isUser } from './userSchema';
-import { FlightSchema } from '../models/flightSchema';
-import { AirbnbSchema } from '../models/airbnbSchema';
-import { ActivitySchema } from '../models/activitySchema';
+import { FlightSchema } from './flightSchema';
+import { AirbnbSchema } from './airbnbSchema';
+import { ActivitySchema } from './activitySchema';
 
 
 export interface isTrip extends Document {
