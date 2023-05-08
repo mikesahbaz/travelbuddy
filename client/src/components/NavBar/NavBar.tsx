@@ -21,7 +21,6 @@ const NavBar: React.FC = () => {
   return (
     <div className='nav-container'>
       <div className='main-container'>
-        
       </div>
       <div className='right-nav-container'>
         <button className='logout-btn' onClick={handleLogout} >Log Out</button>
