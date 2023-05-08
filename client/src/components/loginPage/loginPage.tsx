@@ -18,7 +18,7 @@ const LoginPage: React.FC = () => {
         console.log('Successfully logged in');
       }
     } catch (error: any) {
-      setError(error.message);
+      setError('The email or password you entered was incorrect.');
     }
   }
 

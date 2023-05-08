@@ -5,11 +5,21 @@ import User, { isUser } from '../models/userSchema';
 // Create a trip (POST)
 export const createTrip = async (req: Request, res: Response): Promise<void> => {
   try {
+    const userEmails = req.body.users;
+    const userIds: string[] = await Promise.all(
+      userEmails.map(async (user: string) => { // mapping over the user emails to get their IDs
+        const userFound: any = await User.findOne({ email: user });
+        return userFound._id;
+      })
+    );
+    console.log(userIds);
+    const userCreator = await User.findOne({ email: req.body.creator });
+    const creatorId = userCreator?._id; // sets creator to the creator's ID by matching email
     const trip: isTrip = new Trip ({
       startDate: req.body.startDate,
       endDate: req.body.endDate,
-      users: req.body.users,
-      creator: req.body.creator,
+      users: userIds,
+      creator: creatorId,
       name: req.body.name
     })
     await trip.save();
@@ -32,7 +42,9 @@ export const createTrip = async (req: Request, res: Response): Promise<void> => 
 // Get all Trips by userID (GET)
 export const getAllTripsByUserId = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.params.userId;
+    const firebaseEmail = req.params.firebaseEmail;
+    const user = await User.findOne({ email: firebaseEmail });
+    const userId = user?._id;
     const trips: isTrip[] = await Trip.find({ users: userId });
     res.status(200).send({ trips });
   } catch (error) {
