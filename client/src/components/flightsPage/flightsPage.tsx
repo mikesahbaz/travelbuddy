@@ -3,6 +3,7 @@ import './flightsPage.css';
 import NavBar from '../NavBar/NavBar';
 import { useNavigate, useParams } from 'react-router-dom';
 import { auth } from '../../firebase';
+import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 
 const FlightsPage: React.FC = () => {
   const [startDest, setStartDest] = useState('');
@@ -12,6 +13,13 @@ const FlightsPage: React.FC = () => {
   const [startDestCode, setStartDestCode] = useState('');
   const [endDestCode, setEndDestCode] = useState('');
   const [flightData, setFlightData] = useState<any[] | null>(null);
+
+  function formatDuration(durationInMinutes: number) {
+    const hours = Math.floor(durationInMinutes / 60);
+    const minutes = durationInMinutes % 60;
+    return `${hours}h ${minutes}m`;
+  }
+  
 
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -66,35 +74,80 @@ const FlightsPage: React.FC = () => {
   return (
     <div className='flight-page-container'>
       <form onSubmit={handleSubmitFlightSearch} className='search-form'>
+        <div>
+        <label>From</label>
         <input
           type="text"
           placeholder="Start Destination"
           value={startDest}
           onChange={(e) => setStartDest(e.target.value)}
         />
+        </div>
+        <div>
+        <label>To</label>
         <input
           type="text"
           placeholder="End Destination"
           value={endDest}
           onChange={(e) => setEndDest(e.target.value)}
         />
+        </div>
+        <div>
+        <label>Depart</label>
         <input
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
         />
+        </div>
+        <div>
+        <label>Return</label>
         <input
           type="date"
           value={returnDate}
           onChange={(e) => setReturnDate(e.target.value)}
         />
+        </div>
         <button type="submit">Search Flights</button>
       </form>
 
       <div className='flight-data'>
       {flightData && flightData.map( (flight) => (
         <div key={flight.id} className='flight-item'>
-          <h1>{flight.legs[0].origin.name} To {flight.legs[0].destination.name}</h1>
+          <div className='main-flight-content'>
+            <div className='flight-carrier'>{flight.legs[0].carriers[0].name}</div>
+            <div className='flight-details-top'>
+              <div className='flight-origin-and-time'>
+                <h2>{new Date(flight.legs[0].departure).toLocaleTimeString()}</h2>
+                <h2>{flight.legs[0].origin.display_code}</h2>
+              </div>
+              <div className='flight-duration-and-arrow'>
+                <h4>{formatDuration(flight.legs[0].duration)}</h4>
+                <FaArrowRight className='arrow-right'/>
+              </div>
+              <div className='flight-destination-and-time'>
+                <h2>{new Date(flight.legs[0].arrival).toLocaleTimeString()}</h2>
+                <h2>{flight.legs[0].destination.display_code}</h2>
+              </div>
+            </div>
+            <div className='flight-details-bottom'>
+              <div className='flight-origin-and-time'>
+                <h2>{new Date(flight.legs[1].departure).toLocaleTimeString()}</h2>
+                <h2>{flight.legs[1].origin.display_code}</h2>
+              </div>
+              <div className='flight-duration-and-arrow'>
+                <h4>{formatDuration(flight.legs[1].duration)}</h4>
+                <FaArrowLeft className='arrow-left'/>
+              </div>
+              <div className='flight-destination-and-time'>
+                <h2>{new Date(flight.legs[1].arrival).toLocaleTimeString()}</h2>
+                <h2>{flight.legs[1].destination.display_code}</h2>
+              </div>
+            </div>
+          </div>
+          <div className='right-flight-container'>
+            <h1>${flight.price.amount}</h1>
+          </div>
         </div>
       ))}
       </div>
