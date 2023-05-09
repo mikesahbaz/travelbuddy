@@ -50,6 +50,10 @@ const MainDashboard: React.FC = () => {
     return `${date.toLocaleString('en-US', { month: 'long' })} ${date.getDate()}, ${date.getFullYear()}`
   }
 
+  const handleTripClick = (tripId: string) => {
+    navigate(`/trips/${tripId}`)
+  }
+
   if (!userLoaded) {
     return <p>Loading....</p>
   }
@@ -66,7 +70,7 @@ const MainDashboard: React.FC = () => {
           <button className='create-trip-btn' onClick={handleCreateTripClick}>Plan a trip</button>
         </div>
         {trips && trips.map( (trip) => (
-          <div key={trip._id} className='trip-item' >
+          <div key={trip._id} className='trip-item' onClick={ () => handleTripClick(trip._id)}>
             <div className='trip-item-details'>
               <div className='trip-name-container'>{trip.name}</div>
               <div className='trip-date-container'>{formatDate(trip.startDate)} - {formatDate(trip.endDate)}</div>

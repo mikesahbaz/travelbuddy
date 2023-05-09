@@ -97,7 +97,7 @@ const CreateTrip: React.FC = () => {
       <div className='create-trip-container'>
         <h1>Plan a new trip! </h1>
         <form onSubmit={handleSubmitCreateTrip} className='create-trip-form'>
-        <input type='text' value={name} onChange={event => setName(event.target.value)} placeholder='Trip to....?' ></input>
+        <input type='text' value={name} onChange={event => setName(event.target.value)} placeholder='Going to' ></input>
           <label>Start Date</label>
           <input type='date' value={startDate} onChange={event => setStartDate(event.target.value)} ></input>
           <label>End Date</label>
