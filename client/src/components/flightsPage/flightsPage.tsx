@@ -11,7 +11,9 @@ const FlightsPage: React.FC = () => {
   const [returnDate, setReturnDate] = useState('');
   const [startDestCode, setStartDestCode] = useState('');
   const [endDestCode, setEndDestCode] = useState('');
-  const [flightData, setFlightData] = useState(null);
+  const [flightData, setFlightData] = useState<any[] | null>(null);
+
+  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleSubmitFlightSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,31 +22,37 @@ const FlightsPage: React.FC = () => {
     const options = {
       method: 'GET',
       headers: {
-        'X-RapidAPI-Key': '59105418dcmshf3603ffaa760351p1f2ba6jsne3209d54b546',
+        'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY as string,
         'X-RapidAPI-Host': 'skyscanner50.p.rapidapi.com'
       }
 };
   try {
-    const [startResponse, endResponse] = await Promise.all([
-      fetch(url + startDest, options),
-      fetch(url + endDest, options)
-    ]);
+    const startResponse = await fetch(url + startDest, options);
+    const startData = await startResponse.json();
+    console.log(startData);
+    // setStartDestCode(startData[0]?.PlaceId);
 
-    const [startData, endData] = await Promise.all([
-      startResponse.json(),
-      endResponse.json()
-    ]);
+    // await delay(2000); 
 
-    setStartDestCode(startData[0]?.PlaceId || '');
-    setEndDestCode(endData[0]?.PlaceId);
+    const endResponse = await fetch(url + endDest, options);
+    const endData = await endResponse.json();
+    console.log(endData);
+    // setEndDestCode(endData[0]?.PlaceId);
 
-    const flightSearchUrl = `https://skyscanner50.p.rapidapi.com/api/v1/searchFlights?origin=${startDestCode}&destination=${endDestCode}&date=${startDate}&returnDate=${returnDate}&adults=1&currency=USD`
-    
-    const flightRes = await fetch(flightSearchUrl, options);
-    const flightData = await flightRes.json();
-    
-    setFlightData(flightData);
-    console.log(flightData);
+    // await delay(2000); 
+
+    if (startData.data[0]?.PlaceId && endData.data[0]?.PlaceId) {
+      const flightSearchUrl = `https://skyscanner50.p.rapidapi.com/api/v1/searchFlights?origin=${startData.data[0]?.PlaceId}&destination=${endData.data[0]?.PlaceId}&date=${startDate}&returnDate=${returnDate}&adults=1&currency=USD`
+      console.log('Flight Search URL : ', flightSearchUrl);
+      const flightRes = await fetch(flightSearchUrl, options);
+      const flightData = await flightRes.json();
+      console.log('Flight data: ', flightData);
+      
+      setFlightData(flightData.data.slice(0, 5));
+      console.log(flightData.data.slice(0, 5));
+    } else {
+      console.log('CODES ARE NOT SET');
+    }
 
   } catch (error) {
     console.error('error fetching the airport codes', error);
@@ -57,7 +65,7 @@ const FlightsPage: React.FC = () => {
 
   return (
     <div className='flight-page-container'>
-      <form onSubmit={handleSubmitFlightSearch}>
+      <form onSubmit={handleSubmitFlightSearch} className='search-form'>
         <input
           type="text"
           placeholder="Start Destination"
@@ -84,7 +92,11 @@ const FlightsPage: React.FC = () => {
       </form>
 
       <div className='flight-data'>
-      {flightData && <pre>{JSON.stringify(flightData, null, 2)}</pre>}
+      {flightData && flightData.map( (flight) => (
+        <div key={flight.id} className='flight-item'>
+          <h1>{flight.legs[0].origin.name} To {flight.legs[0].destination.name}</h1>
+        </div>
+      ))}
       </div>
     </div>
   )
