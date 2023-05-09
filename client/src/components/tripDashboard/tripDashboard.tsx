@@ -29,3 +29,5 @@ const TripDashboard: React.FC = () => {
     </div>
   )
 }
+
+export default TripDashboard;

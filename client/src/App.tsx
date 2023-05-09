@@ -3,6 +3,8 @@ import RegisterPage from './components/registerPage/registerPage';
 import LoginPage from './components/loginPage/loginPage';
 import MainDashboard from './components/mainDashboard/mainDashboard';
 import CreateTrip from './components/createTrip/createTrip';
+import TripDashboard from './components/tripDashboard/tripDashboard';
+import FlightsPage from './components/flightsPage/flightsPage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 
@@ -15,6 +17,8 @@ function App() {
         <Route path='/login' element={<LoginPage />} />
         <Route path='/dashboard' element={<MainDashboard />} />
         <Route path='/createTrip' element={<CreateTrip />} />
+        <Route path='/trips/:tripId' element={<TripDashboard />} />
+        <Route path='/flights/:tripId' element={<FlightsPage />} />
       </Routes>
     </div>
     </Router>

@@ -51,7 +51,14 @@ const MainDashboard: React.FC = () => {
   }
 
   const handleTripClick = (tripId: string) => {
-    navigate(`/trips/${tripId}`)
+    navigate(`/trips/${tripId}`);
+  }
+
+  const handleFlightsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const tripId = event.currentTarget.getAttribute('data-trip-id');
+    if (tripId) {
+      navigate(`/flights/${tripId}`);
+    }
   }
 
   if (!userLoaded) {
@@ -74,6 +81,7 @@ const MainDashboard: React.FC = () => {
             <div className='trip-item-details'>
               <div className='trip-name-container'>{trip.name}</div>
               <div className='trip-date-container'>{formatDate(trip.startDate)} - {formatDate(trip.endDate)}</div>
+              <button data-trip-id={trip._id} onClick={handleFlightsClick}>Flights Page</button>
             </div>
           </div>
         ))}
