@@ -3,7 +3,7 @@ import './flightsPage.css';
 import NavBar from '../NavBar/NavBar';
 import { useNavigate, useParams } from 'react-router-dom';
 import { auth } from '../../firebase';
-import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
+import { FaArrowRight, FaArrowLeft, FaHeart } from 'react-icons/fa';
 
 const FlightsPage: React.FC = () => {
   const [startDest, setStartDest] = useState('');
@@ -13,19 +13,39 @@ const FlightsPage: React.FC = () => {
   const [startDestCode, setStartDestCode] = useState('');
   const [endDestCode, setEndDestCode] = useState('');
   const [flightData, setFlightData] = useState<any[] | null>(null);
-
+  const [startData, setStartData] = useState<any>({ data: []});
+  const [endData, setEndData] = useState<any>({ data: []});
+  
   function formatDuration(durationInMinutes: number) {
     const hours = Math.floor(durationInMinutes / 60);
     const minutes = durationInMinutes % 60;
     return `${hours}h ${minutes}m`;
   }
+
+  function timeToMinutes(timeString: string): number {
+    const timeParts = timeString.split(":");
+    const hours = parseInt(timeParts[0], 10);
+    const minutes = parseInt(timeParts[1], 10);
   
+    return hours * 60 + minutes;
+  }
 
-  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
+  function formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const year = date.getFullYear().toString().slice(2);
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+  
+    return `${year}${month}${day}`;
+  }
+  
+  const handleBookingClick = (startPlaceId: string, endPlaceId: string, departureTime: number, returnTime: number) => {
+    window.open(`https://www.skyscanner.com/transport/flights/${startPlaceId}/${endPlaceId}/${formatDate(startDate)}/${formatDate(returnDate)}/?adultsv2=1&cabinclass=economy&childrenv2=&departure-times=${departureTime}-${departureTime + 30},${returnTime}-${returnTime + 30}`)
+  }
+  
   const handleSubmitFlightSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    
     const url = 'https://skyscanner50.p.rapidapi.com/api/v1/searchAirport?query=';
     const options = {
       method: 'GET',
@@ -33,22 +53,22 @@ const FlightsPage: React.FC = () => {
         'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY as string,
         'X-RapidAPI-Host': 'skyscanner50.p.rapidapi.com'
       }
-};
-  try {
+    };
+    try {
     const startResponse = await fetch(url + startDest, options);
     const startData = await startResponse.json();
+    setStartData(startData);
     console.log(startData);
-    // setStartDestCode(startData[0]?.PlaceId);
-
-    // await delay(2000); 
+    setStartDestCode(startData[0]?.PlaceId);
+ 
 
     const endResponse = await fetch(url + endDest, options);
     const endData = await endResponse.json();
+    setEndData(endData);
     console.log(endData);
-    // setEndDestCode(endData[0]?.PlaceId);
-
-    // await delay(2000); 
-
+    setEndDestCode(endData[0]?.PlaceId);
+    
+    
     if (startData.data[0]?.PlaceId && endData.data[0]?.PlaceId) {
       const flightSearchUrl = `https://skyscanner50.p.rapidapi.com/api/v1/searchFlights?origin=${startData.data[0]?.PlaceId}&destination=${endData.data[0]?.PlaceId}&date=${startDate}&returnDate=${returnDate}&adults=1&currency=USD`
       console.log('Flight Search URL : ', flightSearchUrl);
@@ -115,7 +135,7 @@ const FlightsPage: React.FC = () => {
       {flightData && flightData.map( (flight) => (
         <div key={flight.id} className='flight-item'>
           <div className='main-flight-content'>
-            <div className='flight-carrier'>{flight.legs[0].carriers[0].name}</div>
+            <h2 className='flight-carrier'>{flight.legs[0].carriers[0].name}</h2>
             <div className='flight-details-top'>
               <div className='flight-origin-and-time'>
                 <h2>{new Date(flight.legs[0].departure).toLocaleTimeString()}</h2>
@@ -146,7 +166,14 @@ const FlightsPage: React.FC = () => {
             </div>
           </div>
           <div className='right-flight-container'>
+            <FaHeart className='favorite-button' />
             <h1>${flight.price.amount}</h1>
+            <button className='visit-flight-btn' onClick={() => handleBookingClick(
+              startData.data[0]?.PlaceId,
+              endData.data[0]?.PlaceId,
+              timeToMinutes(new Date(flight.legs[0].departure).toLocaleTimeString()),
+              timeToMinutes(new Date(flight.legs[1].departure).toLocaleTimeString())
+            )}>Book</button>
           </div>
         </div>
       ))}
