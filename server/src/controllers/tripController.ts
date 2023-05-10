@@ -5,36 +5,33 @@ import User, { isUser } from '../models/userSchema';
 // Create a trip (POST)
 export const createTrip = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userEmails = req.body.users;
-    const userIds: string[] = await Promise.all(
-      userEmails.map( async (user: string) => { // mapping over the user emails to get their IDs
-        const userFound: any = await User.findOne({ email: user });
-        return userFound._id;
-      })
-    );
-    console.log(userIds);
-    const userCreator = await User.findOne({ email: req.body.creator });
-    const creatorId = userCreator?._id; // sets creator to the creator's ID by matching email
     const trip: isTrip = new Trip ({
+      name: req.body.name,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
-      users: userIds,
-      creator: creatorId,
-      name: req.body.name
+      creator: req.body.creator,
+      users: req.body.users
     })
     await trip.save();
-    console.log('Trip succesfully created');
+    console.log('Trip succesfully created.');
+    console.log(req.body.creator);
+    console.log(req.body.users);
+    const theCreator: isUser | null = await User.findById(req.body.creator);
+    if (theCreator) {
+      theCreator.trips.push(trip._id);
+      await theCreator.save();
+    }
     trip.users.forEach( async (userId) => {
-      const thisUser: isUser | null = await User.findById(userId);
-      if (thisUser) {
-        thisUser.trips.push(trip._id);
-        await thisUser.save();
+      const user: isUser | null = await User.findById(userId);
+      if (user) {
+        user.trips.push(trip._id);
+        await user.save();
       }
     });
-    res.status(201).send({ trip });
+    res.status(201).json({ trip });
   } catch (error) {
-    console.error('Error in createTrip controller', error);
-    res.status(500).send({ message: 'Could not create trip' });
+    console.error('Error in createTrip: ', error);
+    res.status(500).json({ message: 'Could not create trip.' });
   }
 }
 

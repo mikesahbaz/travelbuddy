@@ -8,23 +8,30 @@ import { auth } from '../../firebase';
 const CreateTrip: React.FC = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [userEmails, setUserEmails] = useState([]);
+  const [userIds, setUserIds] = useState([]);
   const [creatorEmail, setCreatorEmail] = useState<string | null>('');
   const [name, setName] = useState('');
   const [users, setUsers] = useState([]);
+  const [creatorId, setCreatorId] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   const resetForm = () => {
     setStartDate('');
     setEndDate('');
-    setUserEmails([]);
+    setUserIds([]);
     setCreatorEmail('');
     setName('');
   }
 
+  const getCreatorIdByEmail = (email: string) => {
+    const user: any = users.find((user: any) => user.email === email);
+    return user ? user._id : null;
+  };
+
   useEffect(() => {
-    fetchUsers();
+      fetchUsers();
+    
 
     const unsubscribe = auth.onAuthStateChanged( (user) => {
       if (user) {
@@ -38,7 +45,7 @@ const CreateTrip: React.FC = () => {
     return () => {
       unsubscribe();
     }
-  }, [])
+  },[])
 
   const fetchUsers = async () => {
     try {
@@ -46,6 +53,8 @@ const CreateTrip: React.FC = () => {
       const data = await res.json();
       setUsers(data.users);
       console.log(data.users);
+      const originalCreatorId = getCreatorIdByEmail(creatorEmail || '');
+      setCreatorId(originalCreatorId);
     } catch (error) {
       console.error('Error fetching users', error);
     }
@@ -54,11 +63,13 @@ const CreateTrip: React.FC = () => {
   const handleSubmitCreateTrip = async function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
+      const originalCreatorId = getCreatorIdByEmail(creatorEmail || '');
+      const allUserIds = [originalCreatorId, ...userIds];
       const formData = {
         startDate: startDate,
         endDate: endDate,
-        users: userEmails,
-        creator: creatorEmail,
+        users: allUserIds,
+        creator: originalCreatorId,
         name: name,
       }
       const res = await fetch(`http://localhost:3001/trips/create`, {
@@ -81,13 +92,13 @@ const CreateTrip: React.FC = () => {
   }
 
   const handleChange = (selectedOptions: any) => {
-    const selectedEmails = selectedOptions.map((option: any) => option.value);
-    setUserEmails(selectedEmails);
-    console.log(userEmails);
+    const selectedIds = selectedOptions.map((option: any) => option.value);
+    setUserIds(selectedIds);
+    console.log(selectedIds);
   };
 
   const userOptions = users.map((user: any) => ({
-    value: user.email,
+    value: user._id,
     label: `${user.firstName} ${user.lastName} ${user.email}`,
   }));
 
