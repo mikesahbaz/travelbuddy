@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import Trip, { isTrip } from '../models/tripSchema';
 //import User, { isUser } from '../models/userSchema';
 import Flight, { isFlight } from '../models/flightSchema';
-
+// for commit
 // favoriteFlight (PUT)
 
 export const addFavoriteFlightToTrip = async (req: Request, res: Response): Promise<void> => {
