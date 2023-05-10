@@ -32,13 +32,14 @@ const FlightsPage: React.FC = () => {
 
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
-    const year = date.getFullYear().toString().slice(2);
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
+    const isoDate = date.toISOString();
+    const year = isoDate.slice(2, 4);
+    const month = isoDate.slice(5, 7);
+    const day = isoDate.slice(8, 10);
   
     return `${year}${month}${day}`;
   }
-  
+ 
   const handleBookingClick = (startPlaceId: string, endPlaceId: string, departureTime: number, returnTime: number) => {
     window.open(`https://www.skyscanner.com/transport/flights/${startPlaceId}/${endPlaceId}/${formatDate(startDate)}/${formatDate(returnDate)}/?adultsv2=1&cabinclass=economy&childrenv2=&departure-times=${departureTime}-${departureTime + 30},${returnTime}-${returnTime + 30}`)
   }
