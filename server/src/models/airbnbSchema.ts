@@ -6,7 +6,7 @@ export interface isAirbnb extends Document {
 };
 
 const AirbnbSchema: Schema = new Schema ({
-  propertyId: String,
+  propertyId: Number,
 });
 
 const Airbnb = db.model<isAirbnb>('Airbnb', AirbnbSchema);

@@ -102,7 +102,7 @@ const AirbnbsPage: React.FC = () => {
             <p>{airbnb.listingBedLabel}</p>
             <p>{airbnb.listingBathroomLabel}</p>
             <p>{airbnb.listingGuestLabel}</p>
-            <p>{airbnb.price}</p>
+            <p>{airbnb.price} per night</p>
           </div>
         ))}
       </div>

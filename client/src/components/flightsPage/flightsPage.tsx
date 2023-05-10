@@ -3,6 +3,7 @@ import './flightsPage.css';
 import NavBar from '../NavBar/NavBar';
 import { auth } from '../../firebase';
 import { FaArrowRight, FaArrowLeft, FaHeart } from 'react-icons/fa';
+import { useParams } from 'react-router';
 
 const FlightsPage: React.FC = () => {
   const [startDest, setStartDest] = useState('');
@@ -15,6 +16,7 @@ const FlightsPage: React.FC = () => {
   const [startData, setStartData] = useState<any>({ data: []});
   const [endData, setEndData] = useState<any>({ data: []});
   const [isLoading, setIsLoading] = useState(false);
+  const { tripId } = useParams();
   
   function formatDuration(durationInMinutes: number) {
     const hours = Math.floor(durationInMinutes / 60);
@@ -42,6 +44,30 @@ const FlightsPage: React.FC = () => {
  
   const handleBookingClick = (startPlaceId: string, endPlaceId: string, departureTime: number, returnTime: number) => {
     window.open(`https://www.skyscanner.com/transport/flights/${startPlaceId}/${endPlaceId}/${formatDate(startDate)}/${formatDate(returnDate)}/?adultsv2=1&cabinclass=economy&childrenv2=&departure-times=${departureTime}-${departureTime + 30},${returnTime}-${returnTime + 30}`)
+  }
+
+  const handleFavoriteClick = async (flight: any) => {
+    try {
+      const res = await fetch(`http://localhost:3001/flights/${tripId}/favorite`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          itineraryId: flight.id,
+          legs: flight.legs
+        })
+      });
+
+      if (!res.ok) {
+        throw new Error('HTTP Error' + res.status);
+      }
+
+      const data = await res.json();
+      console.log('flight was favorited: ', data);
+    } catch (error) {
+      console.error('Error favoriting the flight', error);
+    }
   }
   
   const handleSubmitFlightSearch = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -167,7 +193,7 @@ const FlightsPage: React.FC = () => {
             </div>
           </div>
           <div className='right-flight-container'>
-            <FaHeart className='favorite-button' />
+            <FaHeart className='favorite-button' onClick={() => handleFavoriteClick(flight)} />
             <h1>${flight.price.amount}</h1>
             <button className='visit-flight-btn' onClick={() => handleBookingClick(
               startData.data[0]?.PlaceId,

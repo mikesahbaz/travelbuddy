@@ -1,18 +1,32 @@
 import db from '../database';
 import { Document, Schema } from 'mongoose';
 
+interface Legs {
+  origin: String;
+  destination: String;
+  date: Date;
+}
+
+const LegsSchema: Schema = new Schema ({
+  origin: String,
+  destination: String,
+  date: Date
+});
+
 export interface isFlight extends Document {
   itineraryId: string;
-  entityId?: string;
-  lng?: string;
-  lat?: string;
+  legs: [Legs];
 }
 
 const FlightSchema: Schema = new Schema ({
-  itineraryId: String,
-  entityId: String,
-  lng: String,
-  lat: String,
+  itineraryId: {
+    type: String,
+    required: true,
+  },
+  legs: {
+    type: [LegsSchema],
+  }
+  
 });
 
 const Flight = db.model<isFlight>('Flight', FlightSchema);

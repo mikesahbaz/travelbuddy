@@ -75,6 +75,7 @@ export const getAllUsersByTripId = async (req: Request, res: Response): Promise<
   try {
     const tripId = req.params.tripId;
     const tripUsers = await Trip.findOne({ _id: tripId }).populate('users');
+    console.log(tripUsers);
     console.log('Users found by Trip Id successfully');
 
     res.status(200).send({ tripUsers });
