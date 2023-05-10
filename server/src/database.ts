@@ -3,10 +3,11 @@ import { config } from './config/config';
 
 async function connectToDatabase () {
   try {
-    await mongoose.connect(config.mongo.url, { retryWrites: true, w: 'majority'});
+    await mongoose.connect(config.mongo.url, { retryWrites: true, w: 'majority' });
+    console.log('Connected to the database.');
   } catch (err) {
     console.log('Error connecting to the database: ', err);
-    throw err;
+    process.exit(1);
   }
 }
 

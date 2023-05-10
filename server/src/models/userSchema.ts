@@ -1,13 +1,15 @@
 import db from '../database';
 import { Document, Schema } from 'mongoose';
-import { isTrip } from './tripSchema';
+import { ITripModel } from './tripSchema';
 
-export interface isUser extends Document {
+export interface IUser {
   firstName: string;
   lastName: string;
   email: string;
-  trips: isTrip['_id'][];
-};
+  trips: ITripModel['_id'][];
+}
+
+export interface IUserModel extends IUser, Document {};
 
 const UserSchema: Schema = new Schema (
   {
@@ -35,5 +37,5 @@ const UserSchema: Schema = new Schema (
   }
 );
 
-const User = db.model<isUser>('User', UserSchema);
+const User = db.model<IUserModel>('User', UserSchema);
 export default User;

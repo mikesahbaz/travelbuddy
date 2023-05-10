@@ -1,24 +1,31 @@
 import { Request, Response } from 'express';
-import Trip, { isTrip } from '../models/tripSchema';
-//import User, { isUser } from '../models/userSchema';
-import Flight, { isFlight } from '../models/flightSchema';
+import Flight, { IFlightModel } from '../models/flightSchema';
+import Trip, { ITripModel } from '../models/tripSchema';
 
-// favoriteFlight (PUT)
-
-export const addFavoriteFlightToTrip = async (req: Request, res: Response): Promise<void> => {
+// Update a flight (PUT)
+export const toggleFlightInTrip = async (req: Request, res: Response): Promise<void> => {
   try {
-    const tripId = req.params.tripId;
-    const flightData: isFlight = req.body;
-    const trip: isTrip | null = await Trip.findOne({ _id: tripId });
-    const flight: isFlight = new Flight(flightData);
+    const tripId: string = req.params.tripId;
+    const trip: ITripModel | null = await Trip.findById(tripId);
+
+    const flightData: IFlightModel = req.body;
+    const flight: IFlightModel = new Flight(flightData);
+
     if (trip) {
-      trip.flights.push(flight);
+      const flightIndex = trip.flights.findIndex((flight) => flight.itineraryId === req.body.itineraryId);
+      if (flightIndex > -1) {
+        // flight exist, remove it
+        trip.flights.splice(flightIndex, 1);
+      } else {
+        // flight does not exist, add it
+        trip.flights.push(flight);
+      }
       await trip.save();
     }
     res.status(200).send({ trip });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: 'Error in addFavoriteFlightToTrip'});
+    res.status(500).send({ message: 'Error in toggleFlightInTrip'});
   }
 }
 
