@@ -15,6 +15,7 @@ const FlightsPage: React.FC = () => {
   const [flightData, setFlightData] = useState<any[] | null>(null);
   const [startData, setStartData] = useState<any>({ data: []});
   const [endData, setEndData] = useState<any>({ data: []});
+  const [isLoading, setIsLoading] = useState(false);
   
   function formatDuration(durationInMinutes: number) {
     const hours = Math.floor(durationInMinutes / 60);
@@ -46,6 +47,7 @@ const FlightsPage: React.FC = () => {
   
   const handleSubmitFlightSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     
     const url = 'https://skyscanner50.p.rapidapi.com/api/v1/searchAirport?query=';
     const options = {
@@ -78,6 +80,7 @@ const FlightsPage: React.FC = () => {
       console.log('Flight data: ', flightData);
       
       setFlightData(flightData.data.slice(0, 5));
+      setIsLoading(false);
       console.log(flightData.data.slice(0, 5));
     } else {
       console.log('CODES ARE NOT SET');
@@ -88,9 +91,6 @@ const FlightsPage: React.FC = () => {
   }
 
   };
-
-
-
 
   return (
     <div className='flight-page-container'>
@@ -133,6 +133,7 @@ const FlightsPage: React.FC = () => {
       </form>
 
       <div className='flight-data'>
+        {isLoading && <div>Searching for flights...</div>}
       {flightData && flightData.map( (flight) => (
         <div key={flight.id} className='flight-item'>
           <div className='main-flight-content'>
