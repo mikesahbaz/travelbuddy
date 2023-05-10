@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
-import Trip, { ITripModel } from '../models/tripSchema';
-//import User, { isUser } from '../models/userSchema';
 import Flight, { IFlightModel } from '../models/flightSchema';
+import Trip, { ITripModel } from '../models/tripSchema';
 
-// favoriteFlight (PUT)
-
-export const addFavoriteFlightToTrip = async (req: Request, res: Response): Promise<void> => {
+// Update a flight (PUT)
+export const toggleFlightInTrip = async (req: Request, res: Response): Promise<void> => {
   try {
     const tripId: string = req.params.tripId;
     const trip: ITripModel | null = await Trip.findById(tripId);
@@ -30,4 +28,3 @@ export const addFavoriteFlightToTrip = async (req: Request, res: Response): Prom
     res.status(500).send({ message: 'Error in toggleFlightInTrip'});
   }
 }
-
