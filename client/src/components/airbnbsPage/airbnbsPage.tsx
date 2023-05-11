@@ -22,10 +22,7 @@ const AirbnbsPage: React.FC = () => {
   const handleFavoriteClick = async (airbnb: any) => {
     try {
       if (typeof tripId === 'string') {
-        const formData = {
-          propertyId: airbnb.id,
-        }
-        const data = await toggleFavoriteStay(tripId, formData);
+        const data = await toggleFavoriteStay(tripId, airbnb.id);
         console.log('Airbnb was favorited: ', data);
       }
     } catch (error) {
