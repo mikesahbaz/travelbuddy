@@ -33,7 +33,7 @@ const RegisterPage: React.FC = () => {
       lastName,
       email
     };
-    fetch('http://localhost:3001/users/register', {
+    fetch('http://localhost:3001/users/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
