@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 const TripDashboard: React.FC = () => {
   const { tripId } = useParams();
   const [trip, setTrip] = useState<any>([]);
+  const [flights, setFlights] = useState([]);
 
   const fetchTrip = async () => {
     try {
@@ -15,6 +16,9 @@ const TripDashboard: React.FC = () => {
       const data = await res.json();
       if (res.ok) {
         console.log(data.trip);
+        console.log(data.trip.flights[0].itineraryId);
+        console.log(data.trip.flights[0].legs[0]);
+        console.log(data.trip.flights[0].legs[1]);
         setTrip(data.trip);
       } else {
         console.error('Res was not okay, error fetch trips');
@@ -24,13 +28,21 @@ const TripDashboard: React.FC = () => {
     }
   }
 
-  const fetchFlights = async () => {
-    try {
-      
-    } catch (error) {
-      console.error('Error in fetching flights', error);
-    }
-  }
+//   const fetchFlights = async () => {
+//     const url = `https://skyscanner50.p.rapidapi.com/api/v1/getFlightDetails?itineraryId=${flight.itineraryId}&legs=%5B%7B%22origin%22%3A%22${flight.legs[0].origin}%22%2C%22destination%22%3A%22${flight.legs[0].destination}%22%2C%22date%22%3A%22${flight.legs[0].departure}%22%7D%2C%7B%22date%22%3A%22${flight.legs[1].departure}%22%2C%22destination%22%3A%22${flight.legs[1].destination}%22%2C%22origin%22%3A%22${flight.legs[1].origin}%22%7D%5D&adults=1&currency=USD&countryCode=US&market=en-US`;
+//     const options = {
+//       method: 'GET',
+//       headers: {
+//         'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY,
+//         'X-RapidAPI-Host': 'skyscanner50.p.rapidapi.com'
+//       }
+// };
+//     try {
+
+//     } catch (error) {
+//       console.error('Error in fetching flights', error);
+//     }
+//   }
 
   useEffect(() => {
     fetchTrip();

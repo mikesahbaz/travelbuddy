@@ -9,18 +9,20 @@ export const toggleStayInTrip = async (req: Request, res: Response): Promise<voi
     const trip: ITripModel | null = await Trip.findById(tripId);
 
     const stay: IStayModel = new Stay(req.body);
-    console.log(stay);
     await stay.validate();
 
     if (trip) {
-      const stayIndex = trip.stays.findIndex((stay) => stay.propertyId === req.body.propertyId);
+      const stayIndex = trip.stays.findIndex((stay) => { 
+        console.log('DB STAYS: ', stay.propertyId);
+        console.log('INCOMING STAY: ', req.body.propertyId);
+        stay.propertyId === req.body.propertyId});
+      
       if (stayIndex > -1) {
         // stay exist, remove it
         trip.stays.splice(stayIndex, 1);
       } else {
         // stay does not exist, add it
         trip.stays.push(stay);
-        console.log(trip);
       }
       await trip.save();
     }
