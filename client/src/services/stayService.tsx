@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const toggleFavoriteStay = async (tripId: string, propertyId: number) => {
   try {
-    const response = await axios.put(`http://localhost:3001/flights/${tripId}/favorite`, propertyId);
+    const response = await axios.put(`http://localhost:3001/stays/${tripId}/favorite`, propertyId);
     return response.data;
   } catch (error) {
     console.error(error);
