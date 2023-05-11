@@ -1,0 +1,56 @@
+
+.trip-dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.trip-details,
+.flight-details {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.trip-name,
+.trip-dates {
+  padding: 20px;
+  background-color: #007BFF;
+  color: white;
+  border-radius: 5px;
+}
+
+
+.trip-name h2,
+.trip-dates h2,
+.flight-box {
+  margin: 0;
+}
+
+.NavBar {
+  position: sticky;
+  top: 0;
+  background-color: white;
+}
+
+.trip-dashboard-container {
+  max-width: 600px;
+  margin: auto;
+  margin-top: 60px;
+}
+
+.flights-container {
+  margin-top: 50px;
+}
+
+.flight-box {
+  padding: 20px;
+  background-color: #609fe1;
+  color: white;
+  border-radius: 5px;
+  width: 1000px;
+}
+

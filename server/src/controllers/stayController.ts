@@ -9,7 +9,7 @@ export const toggleStayInTrip = async (req: Request, res: Response): Promise<voi
     const trip: ITripModel | null = await Trip.findById(tripId);
 
     const stay: IStayModel = new Stay(req.body);
-
+    console.log(stay);
     await stay.validate();
 
     if (trip) {
@@ -20,6 +20,7 @@ export const toggleStayInTrip = async (req: Request, res: Response): Promise<voi
       } else {
         // stay does not exist, add it
         trip.stays.push(stay);
+        console.log(trip);
       }
       await trip.save();
     }
