@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router';
 import './airbnbsPage.css';
 import NavBar from '../NavBar/NavBar';
 import { Carousel } from 'react-responsive-carousel';
+import { FaHeart } from 'react-icons/fa';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 const AirbnbsPage: React.FC = () => {
@@ -14,6 +16,29 @@ const AirbnbsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [idData, setIdData] = useState<any>({ data: []});
   const [airbnbData, setAirbnbData] = useState<any[] | null>(null);
+  const { tripId } = useParams();
+
+  const handleFavoriteClick = async (airbnb: any) => {
+    try {
+      const res = await fetch(`http://localhost:3001/stays/${tripId}/favorite`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          propertyId: airbnb.id,
+        })
+      });
+
+      if (!res.ok) {
+        throw new Error('HTTP error' + res.status);
+      }
+      const data = await res.json();
+      console.log('Airbnb was favorited: ', data);
+    } catch (error) {
+      console.error('Error in favoriting the airbnb', error);
+    }
+  }
 
   const handleSubmitSearchForm = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,6 +114,9 @@ const AirbnbsPage: React.FC = () => {
         {isLoading && <div>Searching for stays...</div>}
         {airbnbData && airbnbData.map( (airbnb) => (
           <div className='airbnb-item' key={airbnb.id}>
+            <div className='favorite-button' onClick={() => handleFavoriteClick(airbnb)}>
+              <FaHeart />
+            </div>
             <Carousel className='carousel'>
               {airbnb.images.map( (image: string) => (
                 <div className='slide'>

@@ -61,3 +61,48 @@
   object-fit: cover;
 }
 
+.favorite-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  color: #ccc;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.favorite-button:hover {
+  color: red;
+}
+
+.airbnb-item {
+  position: relative;
+}
+
+.carousel {
+  position: absolute;
+}
+
+
+.control-arrow.control-next, .control-arrow.control-prev {
+  background: transparent;
+  top: 50%;
+  transform: translateY(-5%);
+}
+
+.control-arrow.control-next:before, .control-arrow.control-prev:before {
+  color: rgb(227, 111, 111);
+  font-size: 30px;
+}
+
+.control-next {
+  right: 32% !important;
+  align-items: center;
+}
+
+.control-prev {
+  left: 32% !important;
+}
+
+
+

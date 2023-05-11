@@ -3,6 +3,7 @@ import { config } from './config/config';
 import userRoutes from './routes/userRoutes';
 import tripRoutes from './routes/tripRoutes';
 import flightRoutes from './routes/flightRoutes';
+import stayRoutes from './routes/stayRoutes';
 import cors from 'cors';
 import mongoose from './database';
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use('/users', userRoutes);
 app.use('/trips', tripRoutes);
 app.use('/flights', flightRoutes);
+app.use('/stays', stayRoutes);
 
 async function startServer() {
   try {
