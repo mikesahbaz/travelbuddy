@@ -1,22 +1,29 @@
 import db from '../database';
 import { Document, Schema } from 'mongoose';
 
-interface Legs {
-  origin: String;
-  destination: String;
-  date: Date;
+interface Leg {
+  origin: {
+    display_code: String;
+  };
+  destination: {
+    display_code: String;
+  };
+  departure: Date;
 }
 
-const LegsSchema: Schema = new Schema ({
-  origin: String,
-  destination: String,
-  date: Date
+const LegSchema: Schema = new Schema ({
+  origin: {
+    display_code: String
+  },
+  destination: {
+    display_code: String
+  },
+  departure: Date
 });
-
 
 export interface IFlight {
   itineraryId: string;
-  legs: [Legs];
+  legs: [Leg];
 }
 
 export interface IFlightModel extends IFlight, Document {};
@@ -28,7 +35,7 @@ const FlightSchema: Schema = new Schema (
       required: true,
     },
     legs: {
-      type: [LegsSchema],
+      type: [LegSchema],
     }
   },
   {

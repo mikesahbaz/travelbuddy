@@ -5,6 +5,8 @@ import { auth } from '../../firebase';
 import { User } from 'firebase/auth';
 import { isTrip } from '../../interfaces/tripInterface';
 import { useNavigate } from 'react-router-dom';
+import { get } from 'http';
+import { getAllTripsByUserEmail } from '../../services/tripService';
 
 const MainDashboard: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -28,16 +30,11 @@ const MainDashboard: React.FC = () => {
 
   const fetchAllTrips = async function (userEmail: string) {
     try {
-      const res = await fetch(`http://localhost:3001/trips/mytrips/${userEmail}`);
-      const data = await res.json();
+      const data = await getAllTripsByUserEmail(userEmail);
       console.log(data.trips);
-      if (res.ok) {
-        setTrips(data.trips);
-      } else {
-        console.error(data.message);
-      }
+      setTrips(data.trips);
     } catch (error) {
-      console.error('Error fetching trips: ', error);
+      console.error(error);
     }
   }
 

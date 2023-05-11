@@ -4,6 +4,8 @@ import NavBar from '../NavBar/NavBar';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { auth } from '../../firebase';
+import { getAllUsers } from '../../services/userService';
+import { createTrip } from '../../services/tripService';
 
 const CreateTrip: React.FC = () => {
   const [startDate, setStartDate] = useState('');
@@ -32,7 +34,6 @@ const CreateTrip: React.FC = () => {
   useEffect(() => {
       fetchUsers();
 
-
     const unsubscribe = auth.onAuthStateChanged( (user) => {
       if (user) {
         setCreatorEmail(user.email)
@@ -49,14 +50,13 @@ const CreateTrip: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('http://localhost:3001/users/get');
-      const data = await res.json();
-      setUsers(data.users);
+      const data = await getAllUsers();
       console.log(data.users);
+      setUsers(data.users);
       const originalCreatorId = getCreatorIdByEmail(creatorEmail || '');
       setCreatorId(originalCreatorId);
     } catch (error) {
-      console.error('Error fetching users', error);
+      console.error(error);
     }
   }
 
@@ -66,23 +66,13 @@ const CreateTrip: React.FC = () => {
       const originalCreatorId = getCreatorIdByEmail(creatorEmail || '');
       const allUserIds = [originalCreatorId, ...userIds];
       const formData = {
+        name: name,
         startDate: startDate,
         endDate: endDate,
-        users: allUserIds,
         creator: originalCreatorId,
-        name: name,
+        travelers: allUserIds,
       }
-      const res = await fetch(`http://localhost:3001/trips/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        console.error('There was an error creating the project');
-      }
+      await createTrip(formData);
       resetForm();
       navigate('/dashboard');
     } catch (error) {

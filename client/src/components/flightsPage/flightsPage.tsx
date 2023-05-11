@@ -4,6 +4,7 @@ import NavBar from '../NavBar/NavBar';
 import { auth } from '../../firebase';
 import { FaArrowRight, FaArrowLeft, FaHeart } from 'react-icons/fa';
 import { useParams } from 'react-router';
+import { toggleFavoriteFlight } from '../../services/flightService';
 
 const FlightsPage: React.FC = () => {
   const [startDest, setStartDest] = useState('');
@@ -17,7 +18,7 @@ const FlightsPage: React.FC = () => {
   const [endData, setEndData] = useState<any>({ data: []});
   const [isLoading, setIsLoading] = useState(false);
   const { tripId } = useParams();
-  
+
   function formatDuration(durationInMinutes: number) {
     const hours = Math.floor(durationInMinutes / 60);
     const minutes = durationInMinutes % 60;
@@ -28,7 +29,7 @@ const FlightsPage: React.FC = () => {
     const timeParts = timeString.split(":");
     const hours = parseInt(timeParts[0], 10);
     const minutes = parseInt(timeParts[1], 10);
-  
+
     return hours * 60 + minutes;
   }
 
@@ -38,42 +39,29 @@ const FlightsPage: React.FC = () => {
     const year = isoDate.slice(2, 4);
     const month = isoDate.slice(5, 7);
     const day = isoDate.slice(8, 10);
-  
+
     return `${year}${month}${day}`;
   }
- 
+
   const handleBookingClick = (startPlaceId: string, endPlaceId: string, departureTime: number, returnTime: number) => {
     window.open(`https://www.skyscanner.com/transport/flights/${startPlaceId}/${endPlaceId}/${formatDate(startDate)}/${formatDate(returnDate)}/?adultsv2=1&cabinclass=economy&childrenv2=&departure-times=${departureTime}-${departureTime + 30},${returnTime}-${returnTime + 30}`)
   }
 
   const handleFavoriteClick = async (flight: any) => {
     try {
-      const res = await fetch(`http://localhost:3001/flights/${tripId}/favorite`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          itineraryId: flight.id,
-          legs: flight.legs
-        })
-      });
-
-      if (!res.ok) {
-        throw new Error('HTTP Error' + res.status);
+      if (typeof tripId === 'string') {
+        const data = await toggleFavoriteFlight(tripId, flight.id, flight.legs);
+        console.log('flight was favorited: ', data);
       }
-
-      const data = await res.json();
-      console.log('flight was favorited: ', data);
     } catch (error) {
       console.error('Error favoriting the flight', error);
     }
   }
-  
+
   const handleSubmitFlightSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     const url = 'https://skyscanner50.p.rapidapi.com/api/v1/searchAirport?query=';
     const options = {
       method: 'GET',
@@ -88,22 +76,22 @@ const FlightsPage: React.FC = () => {
     setStartData(startData);
     console.log(startData);
     setStartDestCode(startData[0]?.PlaceId);
- 
+
 
     const endResponse = await fetch(url + endDest, options);
     const endData = await endResponse.json();
     setEndData(endData);
     console.log(endData);
     setEndDestCode(endData[0]?.PlaceId);
-    
-    
+
+
     if (startData.data[0]?.PlaceId && endData.data[0]?.PlaceId) {
       const flightSearchUrl = `https://skyscanner50.p.rapidapi.com/api/v1/searchFlights?origin=${startData.data[0]?.PlaceId}&destination=${endData.data[0]?.PlaceId}&date=${startDate}&returnDate=${returnDate}&adults=1&currency=USD`
       console.log('Flight Search URL : ', flightSearchUrl);
       const flightRes = await fetch(flightSearchUrl, options);
       const flightData = await flightRes.json();
       console.log('Flight data: ', flightData);
-      
+
       setFlightData(flightData.data.slice(0, 5));
       setIsLoading(false);
       console.log(flightData.data.slice(0, 5));

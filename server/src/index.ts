@@ -2,6 +2,8 @@ import express, { Express } from 'express';
 import { config } from './config/config';
 import userRouter from './router/userRouter';
 import tripRouter from './router/tripRouter';
+import flightRouter from './router/flightRouter';
+import stayRouter from './router/stayRouter';
 import cors from 'cors';
 import mongoose from './database';
 
@@ -11,6 +13,8 @@ app.use(express.json());
 
 app.use('/users', userRouter);
 app.use('/trips', tripRouter);
+app.use('/flights', flightRouter);
+app.use('/stays', stayRouter);
 
 async function startServer() {
   try {

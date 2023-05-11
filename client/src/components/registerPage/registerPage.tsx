@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import './registerPage.css';
-import { RegisterForm, initialRegisterFormState } from '../../interfaces/registerFormInterface';
+//import { RegisterForm, initialRegisterFormState } from '../../interfaces/registerFormInterface';
 import { auth, createUserWithEmailAndPassword } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../../services/userService';
 
 const RegisterPage: React.FC = () => {
   const [firstName, setFirstName] = useState<string>('');
@@ -23,7 +24,7 @@ const RegisterPage: React.FC = () => {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      const user = auth.currentUser;
+      // const user = auth.currentUser;
     } catch (error) {
       console.error(error);
     }
@@ -33,19 +34,14 @@ const RegisterPage: React.FC = () => {
       lastName,
       email
     };
-    fetch('http://localhost:3001/users/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-      .then(response => response.json())
-      .then(data => {
-        resetForm();
-        navigate('/login');
-      })
-      .catch(error => console.error(error));
+
+    try {
+      await registerUser(formData);
+      resetForm();
+      navigate('/login');
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   const handleSignIn = () => {

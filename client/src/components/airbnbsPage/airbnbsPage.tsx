@@ -5,6 +5,7 @@ import NavBar from '../NavBar/NavBar';
 import { Carousel } from 'react-responsive-carousel';
 import { FaHeart } from 'react-icons/fa';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { toggleFavoriteStay } from '../../services/stayService';
 
 const AirbnbsPage: React.FC = () => {
   const [destination, setDestination] = useState('');
@@ -20,21 +21,10 @@ const AirbnbsPage: React.FC = () => {
 
   const handleFavoriteClick = async (airbnb: any) => {
     try {
-      const res = await fetch(`http://localhost:3001/stays/${tripId}/favorite`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          propertyId: airbnb.id,
-        })
-      });
-
-      if (!res.ok) {
-        throw new Error('HTTP error' + res.status);
+      if (typeof tripId === 'string') {
+        const data = await toggleFavoriteStay(tripId, airbnb.id);
+        console.log('Airbnb was favorited: ', data);
       }
-      const data = await res.json();
-      console.log('Airbnb was favorited: ', data);
     } catch (error) {
       console.error('Error in favoriting the airbnb', error);
     }
@@ -50,7 +40,7 @@ const AirbnbsPage: React.FC = () => {
       headers: {
         'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY as string,
         'X-RapidAPI-Host': 'airbnb19.p.rapidapi.com'
-      }   
+      }
     };
     try {
       const idResponse = await fetch(url + destination, options);

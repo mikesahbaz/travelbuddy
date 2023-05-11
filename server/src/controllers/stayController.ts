@@ -8,8 +8,9 @@ export const toggleStayInTrip = async (req: Request, res: Response): Promise<voi
     const tripId: string = req.params.tripId;
     const trip: ITripModel | null = await Trip.findById(tripId);
 
-    const airbnbData: IStayModel = req.body;
-    const stay: IStayModel = new Stay(airbnbData);
+    const stay: IStayModel = new Stay(req.body);
+
+    await stay.validate();
 
     if (trip) {
       const stayIndex = trip.stays.findIndex((stay) => stay.propertyId === req.body.propertyId);
@@ -25,7 +26,16 @@ export const toggleStayInTrip = async (req: Request, res: Response): Promise<voi
     res.status(200).send({ trip });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: 'Error in toggleStayInTrip'});
+    if (error instanceof Error) {
+      if (error.name === 'ValidationError') {
+        res.status(400).send({ message: 'Invalid stay data' });
+      } else {
+        res.status(500).send({ message: 'Error in toggleStayInTrip'});
+      }
+    } else {
+      console.error('Caught an unexpected type of error:', error);
+      res.status(500).send({ message: 'Unexpected error in toggleStayInTrip' });
+    }
   }
 }
 

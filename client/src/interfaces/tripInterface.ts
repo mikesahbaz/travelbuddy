@@ -1,13 +1,21 @@
+export interface TripForm {
+  name: string;
+  startDate: string;
+  endDate: string;
+  creator: string;
+  travelers: string[];
+}
+
 export interface isTrip {
+  _id: string;
+  name: string;
+  startDate: string;
+  endDate: string;
+  creator: string[];
+  travelers: string[];
   flights: isFlight[];
   stays: isAirbnb[];
   activities: isActivity[];
-  startDate: string;
-  endDate: string;
-  users: string[];
-  creator: string[];
-  name: string;
-  _id: string;
 };
 
 
@@ -36,3 +44,17 @@ export interface isUser extends Document {
   email: string;
   trips: string[];
 };
+
+export interface ILeg {
+  origin: {
+    display_code: String;
+  };
+  destination: {
+    display_code: String;
+  };
+  departure: Date;
+}
+
+// export interface IStay extends Document {
+//   propertyId: number;
+// };
