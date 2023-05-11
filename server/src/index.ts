@@ -12,9 +12,10 @@ app.use(express.json());
 app.use('/users', userRouter);
 app.use('/trips', tripRouter);
 
-function startServer() {
+async function startServer() {
   try {
-    mongoose.connection;
+    await mongoose.connect(config.mongo.url, { retryWrites: true, w: 'majority'});
+    console.log('Succesfully connected to the DB');
     app.listen(config.server.port, () => {
       console.log(`Server is listening on port ${config.server.port}`);
     });

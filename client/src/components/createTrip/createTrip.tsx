@@ -31,7 +31,7 @@ const CreateTrip: React.FC = () => {
 
   useEffect(() => {
       fetchUsers();
-    
+
 
     const unsubscribe = auth.onAuthStateChanged( (user) => {
       if (user) {
@@ -49,7 +49,7 @@ const CreateTrip: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('http://localhost:3001/users/all');
+      const res = await fetch('http://localhost:3001/users/get');
       const data = await res.json();
       setUsers(data.users);
       console.log(data.users);

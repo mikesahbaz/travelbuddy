@@ -8,7 +8,7 @@ export interface IStay {
 export interface IStayModel extends IStay, Document {};
 
 const StaySchema: Schema = new Schema ({
-  propertyId: String,
+  propertyId: Number,
 });
 export { StaySchema };
 

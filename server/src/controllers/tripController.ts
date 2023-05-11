@@ -1,18 +1,17 @@
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
 import Trip, { ITripModel } from '../models/tripSchema';
 import User, { IUserModel } from '../models/userSchema';
 
 // Create a trip (POST)
 export const createTrip = async (req: Request, res: Response): Promise<void> => {
+  console.log(req.body.users);
   try {
     const trip: ITripModel = new Trip ({
-      _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
-      creator: req.body.creatorId,
-      travelers: req.body.userIds
+      creator: req.body.creator,
+      travelers: req.body.travelers,
     })
     await trip.save();
     console.log('Trip succesfully created.');
@@ -47,15 +46,39 @@ export const getTripByTripId = async (req: Request, res: Response): Promise<void
   }
 }
 
+// Get all trips by userEmail (GET)
+export const getAllTripsByUserEmail = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const firebaseEmail = req.params.firebaseEmail;
+    console.log(firebaseEmail);
+    const user: IUserModel | null = await User.findOne({ email: firebaseEmail });
+    if (user) {
+      const trips: ITripModel[] = await Trip.find({ _id: { $in: user.trips }});
+      if (trips.length > 0) {
+        res.status(200).json({ trips });
+      } else {
+        res.status(404).json({ message: 'No trips exist yet.'});
+      }
+    } else {
+      res.status(404).json({ message: 'User does not exist.'});
+    }
+  } catch (error) {
+    console.error('Error in getAllTripsByUserId', error);
+    res.status(500).json({ message: 'Could not get all trips '});
+  }
+}
+
 // Get all trips by userID (GET)
 export const getAllTripsByUserId = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId: string = req.params.userId;
-    const trips: ITripModel[] = await Trip.find({ users: userId });
-    if (trips) {
-      res.status(200).json({ trips });
-    } else {
-      res.status(401).json({ message: 'No trips exist yet.'});
+    const user: IUserModel | null = await User.findById(userId).populate('trips');
+    if (user) {
+      if (user.trips.length > 0) {
+        res.status(200).json({ trips: user.trips });
+      } else {
+        res.status(404).json({ message: 'No trips exist yet.'});
+      }
     }
   } catch (error) {
     console.error('Error in getAllTripsByUserId: ', error);
@@ -67,10 +90,10 @@ export const getAllTripsByUserId = async (req: Request, res: Response): Promise<
 export const getAllUsersByTripId = async (req: Request, res: Response): Promise<void> => {
   try {
     const tripId: string = req.params.tripId;
-    const travlers = await Trip.findById(tripId).populate('travelers');
-    if (travlers) {
+    const trip = await Trip.findById(tripId).populate('travelers');
+    if (trip) {
       console.log('Travelers found by tripId successfully.');
-      res.status(200).json(travlers);
+      res.status(200).json(trip.travelers);
     } else {
       res.status(404).json({ message: 'Travelers do not exist.' });
     }
@@ -84,14 +107,9 @@ export const getAllUsersByTripId = async (req: Request, res: Response): Promise<
 export const updateTrip = async (req: Request, res: Response): Promise<void> => {
   try {
     const tripId: string = req.params.tripId;
-    const trip: ITripModel | null = await Trip.findByIdAndDelete(tripId);
+    const updatedTrip = req.body;
+    const trip: ITripModel | null = await Trip.findByIdAndUpdate(tripId, updatedTrip, { new: true });
     if (trip) {
-      trip.name = req.body.name;
-      trip.startDate = req.body.startDate;
-      trip.endDate = req.body.endDate;
-      trip.creator = req.body.creatorId;
-      trip.travelers = req.body.userIds;
-      await trip.save();
       res.status(201).json({ trip });
       console.log('Trip updated successfully.');
     } else {
@@ -107,8 +125,17 @@ export const updateTrip = async (req: Request, res: Response): Promise<void> => 
 export const deleteTrip = async (req: Request, res: Response): Promise<void> => {
   try {
     const tripId: string = req.params.tripId;
-    const trip: ITripModel | null = await Trip.findByIdAndDelete(tripId);
+    const trip: ITripModel | null = await Trip.findById(tripId);
+
     if (trip) {
+      // Remove the trip from the users' trips array
+      await User.updateMany(
+        { trips: tripId },
+        { $pull: { trips: tripId }}
+      );
+      // Delete the trip
+      await Trip.findByIdAndDelete(tripId);
+
       res.status(201).json({ trip });
       console.log('Trip deleted successfully');
     } else {
@@ -119,5 +146,3 @@ export const deleteTrip = async (req: Request, res: Response): Promise<void> => 
     res.status(500).json({ message: 'Could not delete the trip.'});
   }
 }
-
-
