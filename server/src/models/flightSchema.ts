@@ -13,6 +13,7 @@ const LegsSchema: Schema = new Schema ({
   date: Date
 });
 
+
 export interface IFlight {
   itineraryId: string;
   legs: [Legs];

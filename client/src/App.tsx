@@ -5,6 +5,7 @@ import MainDashboard from './components/mainDashboard/mainDashboard';
 import CreateTrip from './components/createTrip/createTrip';
 import TripDashboard from './components/tripDashboard/tripDashboard';
 import FlightsPage from './components/flightsPage/flightsPage';
+import AirbnbsPage from './components/airbnbsPage/airbnbsPage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 
@@ -19,6 +20,7 @@ function App() {
         <Route path='/createTrip' element={<CreateTrip />} />
         <Route path='/trips/:tripId' element={<TripDashboard />} />
         <Route path='/flights/:tripId' element={<FlightsPage />} />
+        <Route path='/stays/:tripId' element={<AirbnbsPage />} />
       </Routes>
     </div>
     </Router>

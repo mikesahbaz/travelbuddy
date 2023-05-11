@@ -1,0 +1,108 @@
+.airbnbs-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  margin-top: 60px;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  margin-left: 70px;
+}
+
+.search-form input[type="text"],
+.search-form input[type="date"],
+.search-form input[type="number"] {
+  width: 100px;
+  padding: 5px;
+}
+
+.search-form button {
+  padding: 5px 10px;
+}
+
+.stays-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.airbnb-item {
+  width: 75%;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  padding: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.airbnb-item:hover {
+  transform: scale(1.02);
+}
+
+.airbnb-item h2 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.airbnb-item p {
+  font-size: 1em;
+  margin-bottom: 5px;
+}
+
+.carousel .slide img {
+  width: 100%;
+  max-height: 200px;
+  max-width: 300px;
+  object-fit: cover;
+}
+
+.favorite-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  color: #ccc;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.favorite-button:hover {
+  color: red;
+}
+
+.airbnb-item {
+  position: relative;
+}
+
+.carousel {
+  position: absolute;
+}
+
+
+.control-arrow.control-next, .control-arrow.control-prev {
+  background: transparent;
+  top: 50%;
+  transform: translateY(-5%);
+}
+
+.control-arrow.control-next:before, .control-arrow.control-prev:before {
+  color: rgb(227, 111, 111);
+  font-size: 30px;
+}
+
+.control-next {
+  right: 32% !important;
+  align-items: center;
+}
+
+.control-prev {
+  left: 32% !important;
+}
+
+
+
