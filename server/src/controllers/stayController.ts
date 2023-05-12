@@ -12,10 +12,7 @@ export const toggleStayInTrip = async (req: Request, res: Response): Promise<voi
     await stay.validate();
 
     if (trip) {
-      const stayIndex = trip.stays.findIndex((stay) => { 
-        console.log('DB STAYS: ', stay.propertyId);
-        console.log('INCOMING STAY: ', req.body.propertyId);
-        stay.propertyId === req.body.propertyId});
+      const stayIndex = trip.stays.findIndex((stay) => stay.propertyId === req.body.propertyId);
       
       if (stayIndex > -1) {
         // stay exist, remove it
