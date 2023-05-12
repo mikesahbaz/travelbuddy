@@ -16,6 +16,7 @@ export interface isTrip {
   flights: isFlight[];
   stays: isAirbnb[];
   activities: isActivity[];
+  photoUrl: string;
 };
 
 
