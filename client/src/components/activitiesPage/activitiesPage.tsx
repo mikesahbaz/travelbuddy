@@ -69,8 +69,8 @@ const ActivitiesPage: React.FC = () => {
   return (
     <div className='activity-page-container'>
       <form onSubmit={handleSubmitActivitySearch} className='search-form'>
-        <div>
           <label>Destination City</label>
+        <div>
           <input
             type="text"
             placeholder="City"
@@ -87,13 +87,12 @@ const ActivitiesPage: React.FC = () => {
         {activitiesData && activitiesData.map( (activity) => (
           <div className='activity-item' key={activity.entityId}>
             <div className='main-activity-content'>
-              <h2 className='poi-name'>{activity.poiName}</h2>
-              <h2 className='poi-type'>{activity.poiType}</h2>
-              <h2 className='poi-type-category'>{activity.poiTypeCategory}</h2>
-              <h2 className='poi-type-locale'>{activity.poiTypeLocale}</h2>
+              <h1 className='poi-name'>{activity.poiName}</h1>
+              <h4 className='poi-type'>{activity.poiType}</h4>
+              <p className='poi-type-category'>{activity.poiTypeCategory}</p>
             </div>
-            <div className='right-activity-container'>
             <FaHeart className='favorite-button' onClick={() => handleFavoriteClick(activity)} />
+            <div className='right-activity-container'>
             </div>
           </div>
         ))}
