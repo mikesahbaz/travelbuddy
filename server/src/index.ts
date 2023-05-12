@@ -4,6 +4,7 @@ import userRouter from './router/userRouter';
 import tripRouter from './router/tripRouter';
 import flightRouter from './router/flightRouter';
 import stayRouter from './router/stayRouter';
+import activityRouter from './router/activityRouter';
 import cors from 'cors';
 import mongoose from './database';
 
@@ -15,6 +16,7 @@ app.use('/users', userRouter);
 app.use('/trips', tripRouter);
 app.use('/flights', flightRouter);
 app.use('/stays', stayRouter);
+app.use('/activities', activityRouter);
 
 async function startServer() {
   try {

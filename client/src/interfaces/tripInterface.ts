@@ -55,6 +55,14 @@ export interface ILeg {
   departure: Date;
 }
 
+export interface IActivity {
+  entityId: string;
+  poiName: string;
+  poiType: string;
+  poiTypeCategory: string;
+  poiTypeLocale: string;
+};
+
 // export interface IStay extends Document {
 //   propertyId: number;
 // };

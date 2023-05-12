@@ -61,6 +61,12 @@ const MainDashboard: React.FC = () => {
     navigate(`/stays/${tripId}`);
   }
 
+  
+  const handleActivitiesClick = (tripId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/activities/${tripId}`);
+  }
+
   if (!userLoaded) {
     return <p>Loading....</p>
   }
@@ -83,6 +89,7 @@ const MainDashboard: React.FC = () => {
               <div className='trip-date-container'>{formatDate(trip.startDate)} - {formatDate(trip.endDate)}</div>
               <button data-trip-id={trip._id}  onClick={(e) => handleFlightsClick(trip._id, e)}>Flights Page</button>
               <button data-trip-id={trip._id}  onClick={(e) => handleStaysClick(trip._id, e)}>Stays</button>
+              <button data-trip-id={trip._id}  onClick={(e) => handleActivitiesClick(trip._id, e)}>Activities</button>
             </div>
           </div>
         ))}
