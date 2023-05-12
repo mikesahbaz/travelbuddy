@@ -49,12 +49,13 @@ const ActivitiesPage: React.FC = () => {
   };
 
   const handleFavoriteClick = async (activity: any) => {
+    console.log(activity);
     const backendFormData = {
       entityId: activity.entityId,
-      name: activity.poiName,
-      type: activity.poiType,
-      typeCategory: activity.poiTypeCategory,
-      typeLocale: activity.poiTypeLocale,
+      poiName: activity.poiName,
+      poiType: activity.poiType,
+      poiTypeCategory: activity.poiTypeCategory,
+      poiTypeLocale: activity.poiTypeLocale,
     }
     try {
       if (typeof tripId === 'string') {
@@ -69,8 +70,8 @@ const ActivitiesPage: React.FC = () => {
   return (
     <div className='activity-page-container'>
       <form onSubmit={handleSubmitActivitySearch} className='search-form'>
-          <label>Destination City</label>
         <div>
+          <label>Destination City</label>
           <input
             type="text"
             placeholder="City"
@@ -91,7 +92,7 @@ const ActivitiesPage: React.FC = () => {
               <h4 className='poi-type'>{activity.poiType}</h4>
               <p className='poi-type-category'>{activity.poiTypeCategory}</p>
             </div>
-            <FaHeart className='favorite-button' onClick={() => handleFavoriteClick(activity)} />
+            <FaHeart className='favorite-button-activity' onClick={() => handleFavoriteClick(activity)} />
             <div className='right-activity-container'>
             </div>
           </div>

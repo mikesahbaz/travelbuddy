@@ -64,7 +64,7 @@
   margin-top: 10px;
 }
 
-.flight-item {
+.flight-item-dash {
   background-color: #f1f1f1;
   padding: 20px;
   border-radius: 10px;
@@ -160,6 +160,7 @@ body {
 .stay-features {
   display: flex;
   justify-content: space-between;
+  justify-content: center;
   font-size: 10px;
   color: #777;
 }
@@ -177,4 +178,13 @@ body {
   color: white;
   border-radius: 5px;
   width: 1000px;
+}
+
+.stay-detail {
+  background-color: #609fe1;
+  color: white;
+  border-radius: 5px;
+  align-self: center;
+  width: 60px;
+  padding: 5px;
 }

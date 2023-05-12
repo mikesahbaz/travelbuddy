@@ -13,6 +13,7 @@ const TripDashboard: React.FC = () => {
   const [trip, setTrip] = useState<any>([]);
   const [flights, setFlights] = useState<any[]>([]);
   const [stays, setStays] = useState<any[]>([]);
+  const [activities, setActivities] = useState<any[]>([]);
 
   function formatDuration(durationInMinutes: number) {
     const hours = Math.floor(durationInMinutes / 60);
@@ -28,9 +29,8 @@ const TripDashboard: React.FC = () => {
         setTrip(data.trip);
         setFlights(data.trip.flights);
         setStays(data.trip.stays);
-        console.log(data.trip.flights);
-        console.log(data.trip.stays);
-        
+        setActivities(data.trip.activities);
+        console.log(data.trip.activities);
       } else {
         console.error('Res was not okay, error fetch trips');
       }
@@ -64,15 +64,16 @@ const TripDashboard: React.FC = () => {
           </div>
           <div className='flights'>
           {flights && flights.map( (flight) => (
-              <div className='flight-item' key={flight.id}>
+              <div className='flight-item-dash' key={flight.id}>
                 <div className='flight-legs'>
                   {flight.legs.map((leg: any, index: any) => (
                     <div className='flight-leg' key={index}>
                       <h3>{new Date(leg.departure).toLocaleTimeString()}</h3>
-                      <h3>{leg.origin.display_code}</h3>
+                      <h4>{leg.origin.display_code}</h4>
                       <h3>{new Date(leg.arrival).toLocaleTimeString()}</h3>
-                      <h3>{leg.destination.display_code}</h3>
-                      <h3>{formatDuration(leg.duration)}</h3>
+                      <h4>{leg.destination.display_code}</h4>
+                      <h3 className='duration-and-arrow'>{formatDuration(leg.duration)}</h3>
+                      {index === 0 ? <FaArrowRight/> : <FaArrowLeft/>}
                     </div>
                   ))}
                 </div>
@@ -98,11 +99,18 @@ const TripDashboard: React.FC = () => {
                       <p>{stay.listingGuestLabel}  {stay.listingBathroomLabel}  {stay.listingBedLabel}</p>
                     </div>
                       <p className='stay-detail'>{stay.price}</p>
-
                   </div>
                 </div>
               ))}
           </div>
+        </div>
+        <div className='activities-container-dash'>
+                <div className='activities-box'>
+                  <h2>Favorite Activities</h2>
+                </div>
+        </div>
+        <div className='activities'>
+                {}
         </div>
       </div>
     </div>
