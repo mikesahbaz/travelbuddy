@@ -178,6 +178,7 @@ body {
   color: white;
   border-radius: 5px;
   width: 1000px;
+  margin-top: 10px;
 }
 
 .stay-detail {
@@ -187,4 +188,40 @@ body {
   align-self: center;
   width: 60px;
   padding: 5px;
+}
+
+.activities-box {
+  padding: 20px;
+  background-color: #609fe1;
+  color: white;
+  border-radius: 5px;
+  width: 1000px;
+  margin-top: 10px;
+}
+
+.activities {
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.activity-item-dash {
+  background-color: #f1f1f1;
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 160px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+.activity-item-dash:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.activity-details-dash {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 15px;
 }

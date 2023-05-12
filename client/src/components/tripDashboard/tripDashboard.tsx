@@ -110,7 +110,15 @@ const TripDashboard: React.FC = () => {
                 </div>
         </div>
         <div className='activities'>
-                {}
+                {activities && activities.map( (activity) => (
+                  <div className='activity-item-dash' key={activity._id}>
+                    {/* <img src='' alt='activity'/> */}
+                    <div className='activity-details-dash'>
+                      <h3>{activity.poiName}</h3>
+                      <p>{activity.poiType}</p>
+                    </div>
+                  </div>
+                ))}
         </div>
       </div>
     </div>
