@@ -4,22 +4,29 @@ import NavBar from '../NavBar/NavBar';
 import { auth } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { IFlight } from '../../interfaces/flightInterface';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
 const TripDashboard: React.FC = () => {
   const { tripId } = useParams();
   const [trip, setTrip] = useState<any>([]);
-  const [flights, setFlights] = useState([]);
+  const [flights, setFlights] = useState<any[]>([]);
+
+  function formatDuration(durationInMinutes: number) {
+    const hours = Math.floor(durationInMinutes / 60);
+    const minutes = durationInMinutes % 60;
+    return `${hours}h ${minutes}m`;
+  }
 
   const fetchTrip = async () => {
     try {
       const res = await fetch(`http://localhost:3001/trips/trip/${tripId}`);
       const data = await res.json();
       if (res.ok) {
-        console.log(data.trip);
-        console.log(data.trip.flights[0].itineraryId);
-        console.log(data.trip.flights[0].legs[0]);
-        console.log(data.trip.flights[0].legs[1]);
         setTrip(data.trip);
+        setFlights(data.trip.flights);
+        console.log(data.trip.flights);
+        console.log(data.trip);
       } else {
         console.error('Res was not okay, error fetch trips');
       }
@@ -27,22 +34,6 @@ const TripDashboard: React.FC = () => {
       console.error('Error in fetching trips', error);
     }
   }
-
-//   const fetchFlights = async () => {
-//     const url = `https://skyscanner50.p.rapidapi.com/api/v1/getFlightDetails?itineraryId=${flight.itineraryId}&legs=%5B%7B%22origin%22%3A%22${flight.legs[0].origin}%22%2C%22destination%22%3A%22${flight.legs[0].destination}%22%2C%22date%22%3A%22${flight.legs[0].departure}%22%7D%2C%7B%22date%22%3A%22${flight.legs[1].departure}%22%2C%22destination%22%3A%22${flight.legs[1].destination}%22%2C%22origin%22%3A%22${flight.legs[1].origin}%22%7D%5D&adults=1&currency=USD&countryCode=US&market=en-US`;
-//     const options = {
-//       method: 'GET',
-//       headers: {
-//         'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY,
-//         'X-RapidAPI-Host': 'skyscanner50.p.rapidapi.com'
-//       }
-// };
-//     try {
-
-//     } catch (error) {
-//       console.error('Error in fetching flights', error);
-//     }
-//   }
 
   useEffect(() => {
     fetchTrip();
@@ -68,7 +59,29 @@ const TripDashboard: React.FC = () => {
             <h2>Favorite Flights</h2>
           </div>
           <div className='flights'>
-
+            {flights && flights.map( (flight) => (
+              <div className='flight-item' key={flight.id}>
+                <div className='departing-flight'>
+                  {/* <h2>{flight.legs[0].carriers[0].name}</h2> */}
+                  <h2>{new Date(flight.legs[0].departure).toLocaleTimeString()}</h2>
+                  <h2>{flight.legs[0].origin.display_code}</h2>
+                  <h2>{new Date(flight.legs[0].arrival).toLocaleTimeString()}</h2>
+                  <h2>{flight.legs[0].destination.display_code}</h2>
+                </div>
+                  <div className='flight-time'>
+                  <h2>{formatDuration(flight.legs[0].duration)}</h2>
+                  <FaArrowRight />
+                  </div>
+                <div className='returning-flight'>
+                  {/* <h2>{flight.legs[1].carriers[0].name}</h2> */}
+                  <h2>{new Date(flight.legs[1].departure).toLocaleTimeString()}</h2>
+                  <h2>{flight.legs[1].origin.display_code}</h2>
+                  <h2>{new Date(flight.legs[1].arrival).toLocaleTimeString()}</h2>
+                  <h2>{flight.legs[1].destination.display_code}</h2>
+                </div>
+                <div className='flight-price'>${flight.price.amount}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

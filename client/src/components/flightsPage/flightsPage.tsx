@@ -100,7 +100,7 @@ const FlightsPage: React.FC = () => {
       const flightData = await flightRes.json();
       console.log('Flight data: ', flightData);
 
-      setFlightData(flightData.data.slice(0, 5));
+      setFlightData(flightData.data.slice(0, 20));
       setIsLoading(false);
       console.log(flightData.data.slice(0, 5));
     } else {
