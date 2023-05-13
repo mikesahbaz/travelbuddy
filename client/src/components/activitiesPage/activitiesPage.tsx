@@ -9,8 +9,8 @@ import { toggleFavoriteActivity } from '../../services/activityService';
 import usePlacesPhoto from '../../hooks/usePlacesPhoto';
 
 const ActivitiesPage: React.FC = () => {
-  const photoUrl = usePlacesPhoto('Caracalla Baths', process.env.REACT_APP_PLACES_KEY);
-  console.log(photoUrl);
+  const { fetchPhoto } = usePlacesPhoto(process.env.REACT_APP_PLACES_KEY);
+
   const initialFormState = {
     city: ''
   };
@@ -47,7 +47,12 @@ const ActivitiesPage: React.FC = () => {
     const data_SearchThingToDo = await SearchThingToDo_SkyScanner(entityId, lng, lat);
     const thingsToDo = data_SearchThingToDo.data.thingsToDo;
     console.log(thingsToDo);
-    setActivitiesData(thingsToDo.slice(0, 10));
+    const activitiesWithPhotos = await Promise.all(thingsToDo.map(async (activity: any) => {
+      const photoUrl = await fetchPhoto(activity.poiName);
+      return { ...activity, photoUrl };
+    }));
+    console.log(activitiesWithPhotos);
+    setActivitiesData(activitiesWithPhotos.slice(0, 10));
     setIsLoading(false);
   };
 
@@ -90,6 +95,7 @@ const ActivitiesPage: React.FC = () => {
         {isLoading && <div>Searching for activities...</div>}
         {activitiesData && activitiesData.map( (activity) => (
           <div className='activity-item' key={activity.entityId}>
+            {activity.photoUrl && <img src={activity.photoUrl} alt={activity.poiName} className='activity-photo' />}
             <div className='main-activity-content'>
               <h1 className='poi-name'>{activity.poiName}</h1>
               <h4 className='poi-type'>{activity.poiType}</h4>
