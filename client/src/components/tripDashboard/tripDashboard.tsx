@@ -7,8 +7,10 @@ import { useParams } from 'react-router-dom';
 import { IFlight } from '../../interfaces/flightInterface';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { Carousel } from 'react-responsive-carousel';
+import usePlacesPhoto from '../../hooks/usePlacesPhoto';
 
 const TripDashboard: React.FC = () => {
+  const { fetchPhoto } = usePlacesPhoto(process.env.REACT_APP_PLACES_KEY);
   const { tripId } = useParams();
   const [trip, setTrip] = useState<any>([]);
   const [flights, setFlights] = useState<any[]>([]);
@@ -26,7 +28,9 @@ const TripDashboard: React.FC = () => {
       const res = await fetch(`http://localhost:3001/trips/trip/${tripId}`);
       const data = await res.json();
       if (res.ok) {
-        setTrip(data.trip);
+        const photoUrl = await fetchPhoto(trip.name);
+        const tripWithPhoto = {...trip, photoUrl};
+        setTrip(tripWithPhoto);
         setFlights(data.trip.flights);
         setStays(data.trip.stays);
         setActivities(data.trip.activities);
@@ -49,6 +53,7 @@ const TripDashboard: React.FC = () => {
       <div className='trip-dashboard-container'>
         <div className='trip-details'>
           <div className='trip-name'>
+            <img src={trip.photoUrl} alt={trip.name} className='trip-dash-photo'/>
             <h2>{trip.name}</h2>
           </div>
           <div className='trip-dates'>

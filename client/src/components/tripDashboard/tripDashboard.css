@@ -25,6 +25,10 @@
   border-radius: 5px;
 }
 
+/* .trip-name {
+  display: flex;
+} */
+
 
 .trip-name h2,
 .trip-dates h2,
@@ -225,3 +229,11 @@ body {
   gap: 10px;
   font-size: 15px;
 }
+
+.trip-dash-photo {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 10px;
+  }

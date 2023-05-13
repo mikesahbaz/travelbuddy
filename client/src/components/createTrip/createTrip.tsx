@@ -118,11 +118,12 @@ const CreateTrip: React.FC = () => {
           <input type='date' value={startDate} onChange={event => setStartDate(event.target.value)} ></input>
           <label>End Date</label>
           <input type='date' value={endDate} onChange={event => setEndDate(event.target.value)} ></input>
-          <input type='text' placeholder='Invite your friends..' value={searchQuery} onChange={event => setSearchQuery(event.target.value)}></input>
+          {/* <input type='text' placeholder='Invite your friends..' value={searchQuery} onChange={event => setSearchQuery(event.target.value)}></input> */}
           <Select
             options={userOptions}
             isMulti
             onChange={handleChange}
+            placeholder='Invite your friends...'
           />
           <button type='submit' className='submit-project-btn'>Create the Project</button>
         </form>
