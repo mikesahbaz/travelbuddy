@@ -33,23 +33,20 @@ const usePlacesPhoto = (place, placesApiKey) => {
     });
   };
 
-  useEffect(() => {
-    const fetchPhoto = async () => {
-      try {
-        const placesData = await getPlacesData(place);
-        const photoUrl = placesData[0]?.photos[0]?.getUrl({ maxWidth: 500, maxHeight: 500 });
-        setPhotoUrl(photoUrl);
-      } catch (error) {
-        console.error(error);
-      }
-    };
 
-    if (service) {
-      fetchPhoto();
+  const fetchPhoto = async (place) => {
+    try {
+      const placesData = await getPlacesData(place);
+      const photoUrl = placesData[0]?.photos[0]?.getUrl({ maxWidth: 500, maxHeight: 500 });
+      setPhotoUrl(photoUrl);
+      return photoUrl;
+    } catch (error) {
+      console.error(error);
+      return null;
     }
-  }, [service, place, placesApiKey]);
+  };
 
-  return photoUrl;
+  return { photoUrl, fetchPhoto };
 };
 
 export default usePlacesPhoto;
