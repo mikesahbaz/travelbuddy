@@ -6,6 +6,7 @@ import Select from 'react-select';
 import { auth } from '../../firebase';
 import { getAllUsers } from '../../services/userService';
 import { createTrip } from '../../services/tripService';
+import useGoogleAutocomplete from '../../hooks/useGoogleAutoComplete';
 
 const CreateTrip: React.FC = () => {
   const [startDate, setStartDate] = useState('');
@@ -16,7 +17,14 @@ const CreateTrip: React.FC = () => {
   const [users, setUsers] = useState([]);
   const [creatorId, setCreatorId] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [destinationSearchQuery, setDestinationSearchQuery] = useState('');
   const navigate = useNavigate();
+  const [predictions, setPredictions] = useState<any[]>([]);
+
+  const { predictions: autocompletePredictions } = useGoogleAutocomplete(destinationSearchQuery);
+  useEffect(() => {
+    setPredictions(autocompletePredictions);
+  }, [autocompletePredictions]);
 
   const resetForm = () => {
     setStartDate('');
@@ -98,7 +106,14 @@ const CreateTrip: React.FC = () => {
       <div className='create-trip-container'>
         <h1>Plan a new trip! </h1>
         <form onSubmit={handleSubmitCreateTrip} className='create-trip-form'>
-        <input type='text' value={name} onChange={event => setName(event.target.value)} placeholder='Going to' ></input>
+        <input type='text' value={name} onChange={event => {setName(event.target.value); setDestinationSearchQuery(event.target.value)}} placeholder='Going to' ></input>
+        <select className="select-box" value={name} onChange={event => setName(event.target.value)}>
+          {predictions.map((prediction: any) => (
+            <option key={prediction.place_id} value={prediction.description}>
+              {prediction.description}
+            </option>
+          ))}
+        </select>
           <label>Start Date</label>
           <input type='date' value={startDate} onChange={event => setStartDate(event.target.value)} ></input>
           <label>End Date</label>

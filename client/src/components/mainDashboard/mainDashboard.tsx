@@ -66,7 +66,7 @@ const MainDashboard: React.FC = () => {
       const updatedTrips = [];
 
       for (let trip of data.trips) {
-        const placesData: any = await getPlacesData('Rome');
+        const placesData: any = await getPlacesData('Rome, Italy');
         console.log(placesData[0].photos);
         const photoUrl = placesData[0].photos[0].getUrl({maxWidth: 500, maxHeight: 500});
         console.log(photoUrl);
