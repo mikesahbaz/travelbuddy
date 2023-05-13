@@ -9,7 +9,7 @@ import { toggleFavoriteActivity } from '../../services/activityService';
 import usePlacesPhoto from '../../hooks/usePlacesPhoto';
 
 const ActivitiesPage: React.FC = () => {
-  const photoUrl = usePlacesPhoto('Rome', process.env.REACT_APP_PLACES_KEY);
+  const photoUrl = usePlacesPhoto('Caracalla Baths', process.env.REACT_APP_PLACES_KEY);
   console.log(photoUrl);
   const initialFormState = {
     city: ''
