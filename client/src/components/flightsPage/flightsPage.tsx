@@ -48,9 +48,16 @@ const FlightsPage: React.FC = () => {
   }
 
   const handleFavoriteClick = async (flight: any) => {
+    console.log(startDestCode);
+    console.log(flight.price);
+    const flightFormData = {
+      itineraryId: flight.id,
+      price: flight.price,
+      legs: flight.legs
+    }
     try {
       if (typeof tripId === 'string') {
-        const data = await toggleFavoriteFlight(tripId, flight.id, flight.legs);
+        const data = await toggleFavoriteFlight(tripId, flightFormData);
         console.log('flight was favorited: ', data);
       }
     } catch (error) {
@@ -75,7 +82,8 @@ const FlightsPage: React.FC = () => {
     const startData = await startResponse.json();
     setStartData(startData);
     console.log(startData);
-    setStartDestCode(startData[0]?.PlaceId);
+    setEndDestCode(startData[0]?.PlaceId);
+    console.log(startDestCode);
 
 
     const endResponse = await fetch(url + endDest, options);
@@ -92,7 +100,7 @@ const FlightsPage: React.FC = () => {
       const flightData = await flightRes.json();
       console.log('Flight data: ', flightData);
 
-      setFlightData(flightData.data.slice(0, 5));
+      setFlightData(flightData.data.slice(0, 20));
       setIsLoading(false);
       console.log(flightData.data.slice(0, 5));
     } else {
@@ -104,6 +112,12 @@ const FlightsPage: React.FC = () => {
   }
 
   };
+
+  useEffect(() => {
+    console.log('startDestCode:', startDestCode);
+    console.log('endDestCode:', endDestCode);
+  }, [startDestCode, endDestCode]);
+  
 
   return (
     <div className='flight-page-container'>

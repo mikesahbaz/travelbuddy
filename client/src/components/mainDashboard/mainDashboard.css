@@ -94,3 +94,16 @@
   font-size: 18px;
   color: #474545;
 }
+
+.trip-info-container {
+  display: flex;
+  align-items: center;
+}
+
+.trip-photo {
+  width: 150px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 10px;
+}

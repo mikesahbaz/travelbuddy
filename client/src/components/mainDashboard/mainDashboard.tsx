@@ -1,14 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './mainDashboard.css';
 import NavBar from '../NavBar/NavBar';
 import { auth } from '../../firebase';
 import { User } from 'firebase/auth';
 import { isTrip } from '../../interfaces/tripInterface';
 import { useNavigate } from 'react-router-dom';
-import { get } from 'http';
+import { GoogleMapsApiContext } from '../../contexts/GoogleMapsApiContext';
 import { getAllTripsByUserEmail } from '../../services/tripService';
+const placesApiKey = process.env.REACT_APP_PLACES_KEY;
+let service: any;
 
 const MainDashboard: React.FC = () => {
+  const { isLoaded } = useContext(GoogleMapsApiContext);
+
+  useEffect(() => {
+    if (isLoaded) {
+      service = new window.google.maps.places.PlacesService(document.createElement('div'));
+    }
+  }, [isLoaded]);
+
+
   const [user, setUser] = useState<User | null>(null);
   const [userLoaded, setUserLoaded] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>('');
@@ -23,20 +34,55 @@ const MainDashboard: React.FC = () => {
           setUserEmail(user.email);
           fetchAllTrips(user.email);
         }
-        console.log(userEmail);
     });
     return unsubscribe;
   }, [])
 
+  const getPlacesData = (place: string) => {
+    return new Promise((resolve, reject) => {
+      if (!service) {
+        reject('Service not available');
+        return;
+      }
+  
+      const request = {
+        query: place,
+        fields: ["name", "photos"],
+      };
+  
+      service.textSearch(request, (results: any, status: any) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          resolve(results);
+        } else {
+          reject('Places search failed');
+        }
+      });
+    });
+  };
+  
   const fetchAllTrips = async function (userEmail: string) {
     try {
       const data = await getAllTripsByUserEmail(userEmail);
-      console.log(data.trips);
+      const updatedTrips = [];
+
+      for (let trip of data.trips) {
+        const placesData: any = await getPlacesData('Rome');
+        console.log(placesData[0].photos);
+        const photoUrl = placesData[0].photos[0].getUrl({maxWidth: 500, maxHeight: 500});
+        console.log(photoUrl);
+        trip.photoUrl = photoUrl;
+        updatedTrips.push(trip);
+        console.log(trip);
+      }
+      
       setTrips(data.trips);
+  
     } catch (error) {
       console.error(error);
     }
   }
+
+  
 
   const handleCreateTripClick = () => {
     navigate('/createTrip');
@@ -61,6 +107,12 @@ const MainDashboard: React.FC = () => {
     navigate(`/stays/${tripId}`);
   }
 
+  
+  const handleActivitiesClick = (tripId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/activities/${tripId}`);
+  }
+
   if (!userLoaded) {
     return <p>Loading....</p>
   }
@@ -79,10 +131,14 @@ const MainDashboard: React.FC = () => {
         {trips && trips.map( (trip) => (
           <div key={trip._id} className='trip-item' onClick={ () => handleTripClick(trip._id)}>
             <div className='trip-item-details'>
-              <div className='trip-name-container'>{trip.name}</div>
+              <div className='trip-info-container'>
+                {trip.photoUrl && <img src={trip.photoUrl} alt={trip.name} className='trip-photo' />}
+                <div className='trip-name-container'>{trip.name}</div>
+              </div>
               <div className='trip-date-container'>{formatDate(trip.startDate)} - {formatDate(trip.endDate)}</div>
               <button data-trip-id={trip._id}  onClick={(e) => handleFlightsClick(trip._id, e)}>Flights Page</button>
               <button data-trip-id={trip._id}  onClick={(e) => handleStaysClick(trip._id, e)}>Stays</button>
+              <button data-trip-id={trip._id}  onClick={(e) => handleActivitiesClick(trip._id, e)}>Activities</button>
             </div>
           </div>
         ))}

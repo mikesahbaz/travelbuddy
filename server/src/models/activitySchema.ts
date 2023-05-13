@@ -2,6 +2,7 @@ import db from '../database';
 import { Document, Schema } from 'mongoose';
 
 export interface IActivity {
+  entityId: string;
   poiName: string;
   poiType: string;
   poiTypeCategory: string;
@@ -10,12 +11,18 @@ export interface IActivity {
 
 export interface IActivityModel extends IActivity, Document {};
 
-const ActivitySchema: Schema = new Schema ({
-  poiName: String,
-  poiType: String,
-  poiTypeCategory: String,
-  poiTypeLocale: String,
-});
+const ActivitySchema: Schema = new Schema (
+  {
+    entityId: String,
+    poiName: String,
+    poiType: String,
+    poiTypeCategory: String,
+    poiTypeLocale: String,
+  },
+  {
+    versionKey: false,
+  }
+);
 export { ActivitySchema };
 
 const Activity = db.model<IActivityModel>('Activity', ActivitySchema);
