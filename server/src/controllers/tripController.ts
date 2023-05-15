@@ -4,7 +4,7 @@ import User, { IUserModel } from '../models/userSchema';
 
 // Create a trip (POST)
 export const createTrip = async (req: Request, res: Response): Promise<void> => {
-  console.log(req.body.users);
+  console.log(req.body.travelers);
   try {
     const trip: ITripModel = new Trip ({
       name: req.body.name,
@@ -15,13 +15,13 @@ export const createTrip = async (req: Request, res: Response): Promise<void> => 
     })
     await trip.save();
     console.log('Trip succesfully created.');
-    trip.travelers.forEach( async (userId) => {
+    await Promise.all(trip.travelers.map(async (userId) => {
       const user: IUserModel | null = await User.findById(userId);
       if (user) {
         user.trips.push(trip._id);
         await user.save();
       }
-    });
+    }));
     res.status(201).json({ trip });
   } catch (error) {
     console.error('Error in createTrip: ', error);

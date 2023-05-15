@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Trip, { ITripModel } from '../models/tripSchema';
 import Activity, { IActivityModel } from '../models/activitySchema';
+import { getIo } from '../socket';
 
 // Update a stay (PUT)
 export const toggleActivityInTrip = async (req: Request, res: Response): Promise<void> => {
@@ -23,6 +24,7 @@ export const toggleActivityInTrip = async (req: Request, res: Response): Promise
       }
       await trip.save();
     }
+    getIo().emit('trip_update', trip);
     res.status(200).json({ trip });
   } catch (error) {
     console.error(error);

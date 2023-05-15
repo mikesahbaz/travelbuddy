@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Flight, { IFlightModel } from '../models/flightSchema';
 import Trip, { ITripModel } from '../models/tripSchema';
+import { getIo } from '../socket';
 
 // Update a flight (PUT)
 export const toggleFlightInTrip = async (req: Request, res: Response): Promise<void> => {
@@ -23,6 +24,7 @@ export const toggleFlightInTrip = async (req: Request, res: Response): Promise<v
       }
       await trip.save();
     }
+    getIo().emit('trip_update', trip);
     res.status(200).send({ trip });
   } catch (error) {
     console.error(error);

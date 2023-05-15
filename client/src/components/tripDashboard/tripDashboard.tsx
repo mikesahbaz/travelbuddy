@@ -9,6 +9,7 @@ import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { Carousel } from 'react-responsive-carousel';
 import usePlacesPhoto from '../../hooks/usePlacesPhoto';
 import { useLocation } from 'react-router-dom';
+import io from 'socket.io-client';
 
 const TripDashboard: React.FC = () => {
   const { fetchPhoto } = usePlacesPhoto(process.env.REACT_APP_PLACES_KEY);
@@ -50,7 +51,11 @@ const TripDashboard: React.FC = () => {
   }
 
   useEffect(() => {
+    const socket = io('http://localhost:3001');
+    socket.on('trip_update', fetchTrip);
     fetchTrip();
+
+    return () => {socket.disconnect();};
   }, [])
 
   return (

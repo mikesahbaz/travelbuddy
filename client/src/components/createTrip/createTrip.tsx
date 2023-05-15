@@ -24,6 +24,8 @@ const CreateTrip: React.FC = () => {
   const [destinationSearchQuery, setDestinationSearchQuery] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [predictions, setPredictions] = useState<any[]>([]);
+
+
   const navigate = useNavigate();
 
   const { predictions: autocompletePredictions } = useGoogleAutocomplete(destinationSearchQuery);
@@ -73,9 +75,15 @@ const CreateTrip: React.FC = () => {
     label: `${user.firstName} ${user.lastName} ${user.email}`,
   }));
 
-  const handleFriendSelectChange = (selectedOptions: typeof userOptions) => {
-    const selectedIds: string[] = selectedOptions.map((option) => option.value);
+  // const handleFriendSelectChange = (selectedOptions: typeof userOptions) => {
+  //   const selectedIds: string[] = selectedOptions.map((option) => option.value);
+  //   setUserIds(selectedIds);
+  // };
+
+  const handleChange = (selectedOptions: any) => {
+    const selectedIds = selectedOptions.map((option: any) => option.value);
     setUserIds(selectedIds);
+    console.log(selectedIds);
   };
 
   const getCreatorIdByEmail = (email: string) => {
@@ -86,8 +94,10 @@ const CreateTrip: React.FC = () => {
   const handleSubmitCreateTrip = async function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
+      console.log(userIds);
       const originalCreatorId = getCreatorIdByEmail(creatorEmail);
       const allUserIds = [originalCreatorId, ...userIds];
+      console.log(allUserIds);
       const formData = {
         name: formState.tripName,
         startDate: formState.startDate,
@@ -95,6 +105,7 @@ const CreateTrip: React.FC = () => {
         creator: originalCreatorId,
         travelers: allUserIds,
       }
+      console.log(formData);
       await createTrip(formData);
       resetForm();
       navigate('/dashboard');
@@ -149,7 +160,7 @@ const CreateTrip: React.FC = () => {
         <Select id="trip-users-selectBox"
           options={userOptions}
           isMulti
-          onChange={() => handleFriendSelectChange}
+          onChange={handleChange}
         />
         <button className='trip-submit-btn' id='blue-btn' type='submit'>Create Trip</button>
       </form>
