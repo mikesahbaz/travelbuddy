@@ -145,6 +145,7 @@ body {
   min-width: 160px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
+  overflow: hidden;
 }
 
 .stay-item:hover {
@@ -159,7 +160,8 @@ body {
 }
 
 .stay-item img {
-  width: 300px;
+  width: 100%;
+  height: 200px;
   object-fit: cover;
   border-radius: 5px;
 }
