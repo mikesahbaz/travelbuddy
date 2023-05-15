@@ -30,6 +30,7 @@ const TripDashboard: React.FC = () => {
       if (res.ok) {
         const photoUrl = await fetchPhoto(trip.name);
         const tripWithPhoto = {...trip, photoUrl};
+        console.log(tripWithPhoto);
         setTrip(tripWithPhoto);
         setFlights(data.trip.flights);
         setStays(data.trip.stays);
