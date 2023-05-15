@@ -159,7 +159,7 @@ body {
 }
 
 .stay-item img {
-  width: 100%;
+  width: 300px;
   object-fit: cover;
   border-radius: 5px;
 }
