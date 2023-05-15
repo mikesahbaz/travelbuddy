@@ -32,37 +32,41 @@ label {
   margin-bottom: 0.5rem;
 }
 
-input[type='date'], input[type='text'] {
-  font-size: 1rem;
+.trip-input {
   padding: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-bottom: 1.5rem;
 }
 
 .react-select__control {
   margin-bottom: 1.5rem;
 }
 
-.submit-project-btn {
-  background-color: #007bff;
-  color: #fff;
+.trip-submit-btn {
+  padding: 12px 24px;
   font-size: 1rem;
   font-weight: 600;
-  padding: 12px 24px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+#blue-btn {
+  background-color: #007bff;
+  color: #fff;
   transition: background-color 0.3s ease-in-out;
 }
 
-.submit-project-btn:hover {
+#blue-btn:hover {
   background-color: #0056b3;
 }
 
 .select-box {
-  width: 100%;
   padding: 10px;
+  margin-bottom: 20px;
+  width: 100%;
   border: none;
   border-radius: 5px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
@@ -73,4 +77,8 @@ input[type='date'], input[type='text'] {
 
 .select-box option {
   padding: 10px;
+}
+
+#trip-users-selectBox {
+  margin-bottom: 20px;
 }

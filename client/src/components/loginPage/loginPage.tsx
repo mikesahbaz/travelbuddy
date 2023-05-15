@@ -24,6 +24,7 @@ const LoginPage: React.FC = () => {
         navigate('/dashboard');
       }
     } catch (error) {
+      console.error(error);
       setError('The email or password you entered was incorrect.');
     }
   }
@@ -31,23 +32,23 @@ const LoginPage: React.FC = () => {
   return (
     <div className='login-page-container'>
       <div className='login-form-container'>
-        <h1>Login</h1>
+        <h1>Sign In</h1>
         <form className='login-form' onSubmit={handleLogin}>
-          <input id='login-form-email'
+          <input className='login-input'
             type='text'
             placeholder='Email...'
             name='email'
             value={formState.email}
             onChange={handleInputChange}
           />
-          <input id='login-form-password'
+          <input className='login-input'
             type='password'
             placeholder='Password...'
             name='password'
             value={formState.password}
             onChange={handleInputChange}
           />
-          <button id='sign-in-btn' type='submit'>Log In</button>
+          <button className='submit-btn' id='green-btn' type='submit'>Sign In</button>
         </form>
         {error && <p id="login-form-error">{error}</p>}
       </div>
