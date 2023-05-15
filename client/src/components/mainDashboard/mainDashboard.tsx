@@ -66,7 +66,7 @@ const MainDashboard: React.FC = () => {
       const updatedTrips = [];
 
       for (let trip of data.trips) {
-        const placesData: any = await getPlacesData('Rome, Italy');
+        const placesData: any = await getPlacesData(trip.name);
         console.log(placesData[0].photos);
         const photoUrl = placesData[0].photos[0].getUrl({maxWidth: 500, maxHeight: 500});
         console.log(photoUrl);
@@ -133,7 +133,7 @@ const MainDashboard: React.FC = () => {
             <div className='trip-item-details'>
               <div className='trip-info-container'>
                 {trip.photoUrl && <img src={trip.photoUrl} alt={trip.name} className='trip-photo' />}
-                <div className='trip-name-container'>{trip.name}</div>
+                <div className='trip-name-container'>Trip to {trip.name}</div>
               </div>
               <div className='trip-date-container'>{formatDate(trip.startDate)} - {formatDate(trip.endDate)}</div>
               <button data-trip-id={trip._id}  onClick={(e) => handleFlightsClick(trip._id, e)}>Flights Page</button>

@@ -102,7 +102,6 @@ const FlightsPage: React.FC = () => {
 
       setFlightData(flightData.data.slice(0, 20));
       setIsLoading(false);
-      console.log(flightData.data.slice(0, 5));
     } else {
       console.log('CODES ARE NOT SET');
     }
