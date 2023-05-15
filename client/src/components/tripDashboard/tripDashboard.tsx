@@ -8,6 +8,7 @@ import { IFlight } from '../../interfaces/flightInterface';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { Carousel } from 'react-responsive-carousel';
 import usePlacesPhoto from '../../hooks/usePlacesPhoto';
+// test commit
 
 const TripDashboard: React.FC = () => {
   const { fetchPhoto } = usePlacesPhoto(process.env.REACT_APP_PLACES_KEY);
