@@ -1,4 +1,6 @@
 import express, { Express } from 'express';
+import { Server } from 'http';
+import { Server as IoServer } from 'socket.io';
 import { config } from './config/config';
 import userRouter from './router/userRouter';
 import tripRouter from './router/tripRouter';
@@ -9,6 +11,8 @@ import cors from 'cors';
 import mongoose from './database';
 
 const app: Express = express();
+const server = new Server(app);
+const io = new IoServer(server);
 app.use(cors());
 app.use(express.json());
 
@@ -34,5 +38,21 @@ async function startServer() {
 if (process.env.NODE_ENV !== 'test') {
   startServer();
 }
+
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+
+  socket.on('trip_update', () => {
+    console.log('Trip updated');
+    io.emit('trip_update');
+  })
+
+});
+
 
 export default app;
