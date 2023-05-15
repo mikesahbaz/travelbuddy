@@ -93,8 +93,8 @@ const MainDashboard: React.FC = () => {
     return `${date.toLocaleString('en-US', { month: 'long' })} ${date.getDate()}, ${date.getFullYear()}`
   }
 
-  const handleTripClick = (tripId: string) => {
-    navigate(`/trips/${tripId}`);
+  const handleTripClick = (tripId: string, tripPhotoUrl: string) => {
+    navigate(`/trips/${tripId}`, { state: { photoUrl: tripPhotoUrl }});
   }
 
   const handleFlightsClick = (tripId: string, e: React.MouseEvent) => {
@@ -129,7 +129,7 @@ const MainDashboard: React.FC = () => {
           <button className='create-trip-btn' onClick={handleCreateTripClick}>Plan a trip</button>
         </div>
         {trips && trips.map( (trip) => (
-          <div key={trip._id} className='trip-item' onClick={ () => handleTripClick(trip._id)}>
+          <div key={trip._id} className='trip-item' onClick={ () => handleTripClick(trip._id, trip.photoUrl)}>
             <div className='trip-item-details'>
               <div className='trip-info-container'>
                 {trip.photoUrl && <img src={trip.photoUrl} alt={trip.name} className='trip-photo' />}

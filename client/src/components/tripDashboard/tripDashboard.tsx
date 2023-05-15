@@ -8,7 +8,7 @@ import { IFlight } from '../../interfaces/flightInterface';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { Carousel } from 'react-responsive-carousel';
 import usePlacesPhoto from '../../hooks/usePlacesPhoto';
-// test commit
+import { useLocation } from 'react-router-dom';
 
 const TripDashboard: React.FC = () => {
   const { fetchPhoto } = usePlacesPhoto(process.env.REACT_APP_PLACES_KEY);
@@ -17,6 +17,8 @@ const TripDashboard: React.FC = () => {
   const [flights, setFlights] = useState<any[]>([]);
   const [stays, setStays] = useState<any[]>([]);
   const [activities, setActivities] = useState<any[]>([]);
+  const location = useLocation();
+  const photoUrl = location.state.photoUrl;
 
   function formatDuration(durationInMinutes: number) {
     const hours = Math.floor(durationInMinutes / 60);
@@ -29,14 +31,16 @@ const TripDashboard: React.FC = () => {
       const res = await fetch(`http://localhost:3001/trips/trip/${tripId}`);
       const data = await res.json();
       if (res.ok) {
-        const photoUrl = await fetchPhoto(trip.name);
-        const tripWithPhoto = {...trip, photoUrl};
-        console.log(tripWithPhoto);
+        const tripWithPhoto = {...data.trip, photoUrl};
+        console.log(tripWithPhoto.startDate);
+        const activitiesWithPhotos = await Promise.all(data.trip.activities.map(async (activity: any) => {
+          const photoUrl = await fetchPhoto(activity.poiName);
+          return { ...activity, photoUrl };
+        }));
         setTrip(tripWithPhoto);
         setFlights(data.trip.flights);
         setStays(data.trip.stays);
-        setActivities(data.trip.activities);
-        console.log(data.trip.activities);
+        setActivities(activitiesWithPhotos);
       } else {
         console.error('Res was not okay, error fetch trips');
       }
@@ -75,12 +79,18 @@ const TripDashboard: React.FC = () => {
                 <div className='flight-legs'>
                   {flight.legs.map((leg: any, index: any) => (
                     <div className='flight-leg' key={index}>
-                      <h3>{new Date(leg.departure).toLocaleTimeString()}</h3>
-                      <h4>{leg.origin.display_code}</h4>
-                      <h3>{new Date(leg.arrival).toLocaleTimeString()}</h3>
-                      <h4>{leg.destination.display_code}</h4>
-                      <h3 className='duration-and-arrow'>{formatDuration(leg.duration)}</h3>
-                      {index === 0 ? <FaArrowRight/> : <FaArrowLeft/>}
+                      <div className='departing-flight-leg'>
+                        <h3>{new Date(leg.departure).toLocaleTimeString()}</h3>
+                        <h4>{leg.origin.display_code}</h4>
+                      </div>
+                      <div className='duration-container'>
+                        <p className='duration-and-arrow'>{formatDuration(leg.duration)}</p>
+                        {index === 0 ? <FaArrowRight/> : <FaArrowLeft/>}
+                      </div>
+                      <div className='arriving-flight-leg'>
+                        <h3>{new Date(leg.arrival).toLocaleTimeString()}</h3>
+                        <h4>{leg.destination.display_code}</h4>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -121,6 +131,7 @@ const TripDashboard: React.FC = () => {
                   <div className='activity-item-dash' key={activity._id}>
                     {/* <img src='' alt='activity'/> */}
                     <div className='activity-details-dash'>
+                      <img src={activity.photoUrl} alt={activity.poiName} className='activity-photo' />
                       <h3>{activity.poiName}</h3>
                       <p>{activity.poiType}</p>
                     </div>
