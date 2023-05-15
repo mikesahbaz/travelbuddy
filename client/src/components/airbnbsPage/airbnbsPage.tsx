@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import './airbnbsPage.css';
 import NavBar from '../NavBar/NavBar';
 import { Carousel } from 'react-responsive-carousel';
-import { FaHeart } from 'react-icons/fa';
+import { FaHeart, FaStar } from 'react-icons/fa';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { toggleFavoriteStay } from '../../services/stayService';
 
@@ -126,11 +126,9 @@ const AirbnbsPage: React.FC = () => {
               ))}
             </Carousel>
             <h2>{airbnb.listingName}</h2>
-            <p>{airbnb.avgRating}</p>
+            <p><FaStar className='rating-star'/> {airbnb.avgRating}</p>
             <p>{airbnb.publicAddress}</p>
-            <p>{airbnb.listingBedLabel}</p>
-            <p>{airbnb.listingBathroomLabel}</p>
-            <p>{airbnb.listingGuestLabel}</p>
+            <p>{airbnb.listingBedLabel} - {airbnb.listingBathroomLabel} - {airbnb.listingGuestLabel}</p>
             <p>{airbnb.price} per night</p>
           </div>
         ))}
