@@ -4,12 +4,12 @@
   "description": "",
   "main": "dis/index.js",
   "scripts": {
-    "test": "jest",
-    "build": "rimraf dist && npx tsc",
+    "test": "NODE_ENV=test jest --detectOpenHandles",
+    "build": "rimraf dist && npx tsc -p tsconfig.build.json",
     "prestart": "npm run build",
     "start": "node dist/index.js",
-    "predev": "rimraf dist && npx tsc",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+    "predev": "rimraf dist && npx tsc -p tsconfig.build.json",
+    "dev": "concurrently \"npx tsc -p tsconfig.build.json --watch\" \"nodemon -q dist/index.js\""
   },
   "keywords": [],
   "author": "",
@@ -28,8 +28,10 @@
     "@types/supertest": "^2.0.12",
     "concurrently": "^8.0.1",
     "jest": "^29.5.0",
+    "mongodb-memory-server": "^8.12.2",
     "rimraf": "^5.0.0",
     "supertest": "^6.3.3",
+    "ts-jest": "^29.1.0",
     "typescript": "^5.0.4"
   }
 }

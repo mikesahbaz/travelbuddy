@@ -20,7 +20,7 @@ app.use('/activities', activityRouter);
 
 async function startServer() {
   try {
-    await mongoose.connect(config.mongo.url, { retryWrites: true, w: 'majority'});
+    await mongoose.connect(config.mongo.url, { retryWrites: true, w: 'majority' });
     console.log('Succesfully connected to the DB');
     app.listen(config.server.port, () => {
       console.log(`Server is listening on port ${config.server.port}`);
@@ -31,6 +31,8 @@ async function startServer() {
   }
 }
 
-startServer();
+if (process.env.NODE_ENV !== 'test') {
+  startServer();
+}
 
 export default app;

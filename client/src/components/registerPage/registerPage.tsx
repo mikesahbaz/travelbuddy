@@ -1,38 +1,39 @@
 import React, { useState } from 'react';
 import './registerPage.css';
-//import { RegisterForm, initialRegisterFormState } from '../../interfaces/registerFormInterface';
-import { auth, createUserWithEmailAndPassword } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
+import { auth, createUserWithEmailAndPassword } from '../../firebase';
 import { registerUser } from '../../services/userService';
 
 const RegisterPage: React.FC = () => {
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const initialFormState = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: ''
+  }
+  const [formState, setFormState] = useState(initialFormState);
   const navigate = useNavigate();
 
-  const resetForm = () => {
-    setFirstName('');
-    setLastName('');
-    setEmail('');
-    setPassword('');
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormState((prevState) => ({...prevState, [e.target.name]: e.target.value}));
   }
 
-  const handleSubmitForm = async function (e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const resetForm = () => {
+    setFormState(initialFormState);
+  }
 
+  const handleRegister = async function (e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      // const user = auth.currentUser;
+      await createUserWithEmailAndPassword(auth, formState.email, formState.password);
     } catch (error) {
       console.error(error);
     }
 
     const formData = {
-      firstName,
-      lastName,
-      email
+      firstName: formState.firstName,
+      lastName: formState.lastName,
+      email: formState.email,
     };
 
     try {
@@ -52,22 +53,42 @@ const RegisterPage: React.FC = () => {
     <div className='register-page-container'>
       <div className='register-form-container'>
         <h1>Register</h1>
-        <form onSubmit={handleSubmitForm} className='register-form'>
-          <input type='text' value={firstName} onChange={event => setFirstName(event.target.value)}  placeholder='First Name' className='register-input' ></input>
-          <input type='text' value={lastName} onChange={event => setLastName(event.target.value)}  placeholder='Last Name' className='register-input'></input>
-          <input type='text' value={email} onChange={event => setEmail(event.target.value)}  placeholder='Email' className='register-input'></input>
-          <input type='password' value={password} onChange={event => setPassword(event.target.value)}  placeholder='password' className='register-input'></input>
-          <button type='submit' className='register-btn'>Register</button>
+        <form className='register-form' onSubmit={handleRegister}>
+          <input className='register-input'
+            type='text'
+            placeholder='First Name'
+            name='firstName'
+            value={formState.firstName}
+            onChange={handleInputChange}
+          />
+          <input className='register-input'
+            type='text'
+            placeholder='Last Name'
+            name='lastName'
+            value={formState.lastName}
+            onChange={handleInputChange}
+          />
+          <input className='register-input'
+            type='text'
+            placeholder='Email'
+            name='email'
+            value={formState.email}
+            onChange={handleInputChange}
+          />
+          <input className='register-input'
+            type='password'
+            placeholder='Password'
+            name='password'
+            value={formState.password}
+            onChange={handleInputChange}
+          />
+          <button className='submit-btn' id='green-btn' type='submit'>Register</button>
         </form>
         <p>Already have an account?</p>
-        <button className='sign-in-btn' onClick={handleSignIn}>Sign In</button>
+        <button className='submit-btn' id='grey-btn' onClick={handleSignIn}>Sign In</button>
       </div>
-
     </div>
   )
 }
-
-
-
 
 export default RegisterPage;
