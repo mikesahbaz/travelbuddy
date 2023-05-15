@@ -6,6 +6,8 @@ import { Carousel } from 'react-responsive-carousel';
 import { FaHeart, FaStar } from 'react-icons/fa';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { toggleFavoriteStay } from '../../services/stayService';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AirbnbsPage: React.FC = () => {
   const [destination, setDestination] = useState('');
@@ -34,10 +36,18 @@ const AirbnbsPage: React.FC = () => {
     try {
       if (typeof tripId === 'string') {
         const data = await toggleFavoriteStay(tripId, stayFormData);
+        toast.success('Airbnb was favorited!', {
+          className: 'toast-success',
+          position: toast.POSITION.TOP_CENTER
+        });
         console.log('Airbnb was favorited: ', data);
       }
     } catch (error) {
       console.error('Error in favoriting the airbnb', error);
+      toast.error('Error favoriting the airbnb', {
+        className: 'toast-error',
+        position: toast.POSITION.TOP_CENTER
+      });
     }
   }
 
@@ -83,6 +93,7 @@ const AirbnbsPage: React.FC = () => {
     <div>
     <NavBar />
     <div className='airbnbs-page-container'>
+      <ToastContainer />
     <form onSubmit={handleSubmitSearchForm} className='search-form'>
         <label>
           Destination:

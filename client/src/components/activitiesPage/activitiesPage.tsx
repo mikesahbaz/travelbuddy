@@ -7,6 +7,8 @@ import { SearchHotel_SkyScanner } from '../../services/activityService';
 import { SearchThingToDo_SkyScanner } from '../../services/activityService';
 import { toggleFavoriteActivity } from '../../services/activityService';
 import usePlacesPhoto from '../../hooks/usePlacesPhoto';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ActivitiesPage: React.FC = () => {
   const { fetchPhoto } = usePlacesPhoto(process.env.REACT_APP_PLACES_KEY);
@@ -68,15 +70,24 @@ const ActivitiesPage: React.FC = () => {
     try {
       if (typeof tripId === 'string') {
         const data = await toggleFavoriteActivity(tripId, backendFormData);
+        toast.success('Activity was favorited!', {
+          className: 'toast-success',
+          position: toast.POSITION.TOP_CENTER
+        });
         console.log('activity was favorited: ', data);
       }
     } catch (error) {
       console.error('Error favoriting the activity', error);
+      toast.error('Error favoriting the activity', {
+        className: 'toast-error',
+        position: toast.POSITION.TOP_CENTER
+      });
     }
   }
 
   return (
     <div className='activity-page-container'>
+      <ToastContainer />
       <form onSubmit={handleSubmitActivitySearch} className='search-form'>
         <div>
           <label>Destination City</label>

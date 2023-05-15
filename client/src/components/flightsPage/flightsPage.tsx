@@ -5,6 +5,9 @@ import { auth } from '../../firebase';
 import { FaArrowRight, FaArrowLeft, FaHeart } from 'react-icons/fa';
 import { useParams } from 'react-router';
 import { toggleFavoriteFlight } from '../../services/flightService';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const FlightsPage: React.FC = () => {
   const [startDest, setStartDest] = useState('');
@@ -58,10 +61,18 @@ const FlightsPage: React.FC = () => {
     try {
       if (typeof tripId === 'string') {
         const data = await toggleFavoriteFlight(tripId, flightFormData);
+        toast.success('Flight was favorited!', {
+          className: 'toast-success',
+          position: toast.POSITION.TOP_CENTER
+        });
         console.log('flight was favorited: ', data);
       }
     } catch (error) {
       console.error('Error favoriting the flight', error);
+      toast.error('Error favoriting the flight', {
+        className: 'toast-error',
+        position: toast.POSITION.TOP_CENTER
+      });
     }
   }
 
@@ -120,6 +131,7 @@ const FlightsPage: React.FC = () => {
 
   return (
     <div className='flight-page-container'>
+      <ToastContainer />
       <form onSubmit={handleSubmitFlightSearch} className='search-form'>
         <div>
         <label>From</label>
