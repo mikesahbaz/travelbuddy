@@ -5,11 +5,11 @@
   "main": "dis/index.js",
   "scripts": {
     "test": "NODE_ENV=test jest --detectOpenHandles",
-    "build": "rimraf dist && npx tsc",
+    "build": "rimraf dist && npx tsc -p tsconfig.build.json",
     "prestart": "npm run build",
     "start": "node dist/index.js",
-    "predev": "rimraf dist && npx tsc",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+    "predev": "rimraf dist && npx tsc -p tsconfig.build.json",
+    "dev": "concurrently \"npx tsc -p tsconfig.build.json --watch\" \"nodemon -q dist/index.js\""
   },
   "keywords": [],
   "author": "",
