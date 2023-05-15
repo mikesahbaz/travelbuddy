@@ -12,7 +12,7 @@ import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
 
 const TripDashboard: React.FC = () => {
-  const { fetchPhoto } = usePlacesPhoto(process.env.REACT_APP_PLACES_KEY);
+  const { fetchPhoto, isServiceReady } = usePlacesPhoto(process.env.REACT_APP_PLACES_KEY);
   const { tripId } = useParams();
   const [trip, setTrip] = useState<any>([]);
   const [flights, setFlights] = useState<any[]>([]);
@@ -53,10 +53,11 @@ const TripDashboard: React.FC = () => {
   useEffect(() => {
     const socket = io('http://localhost:3001');
     socket.on('trip_update', fetchTrip);
-    fetchTrip();
-
+    if (isServiceReady) {
+      fetchTrip();
+    }
     return () => {socket.disconnect();};
-  }, [])
+  }, [isServiceReady]);
 
   return (
     <div>

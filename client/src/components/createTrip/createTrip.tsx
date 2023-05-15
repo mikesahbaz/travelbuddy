@@ -75,16 +75,16 @@ const CreateTrip: React.FC = () => {
     label: `${user.firstName} ${user.lastName} ${user.email}`,
   }));
 
-  // const handleFriendSelectChange = (selectedOptions: typeof userOptions) => {
-  //   const selectedIds: string[] = selectedOptions.map((option) => option.value);
-  //   setUserIds(selectedIds);
-  // };
-
-  const handleChange = (selectedOptions: any) => {
-    const selectedIds = selectedOptions.map((option: any) => option.value);
+  const handleFriendSelectChange = (
+    selectedOptions: readonly {label:string, value:string}[] | null
+  ) => {
+  if (selectedOptions) {
+    const selectedIds: string[] = selectedOptions.map((option) => option.value);
     setUserIds(selectedIds);
-    console.log(selectedIds);
-  };
+  } else {
+    setUserIds([]);
+  }
+};
 
   const getCreatorIdByEmail = (email: string) => {
     const user = users.find((user: IUser) => user.email === email) as IUser;
@@ -160,7 +160,7 @@ const CreateTrip: React.FC = () => {
         <Select id="trip-users-selectBox"
           options={userOptions}
           isMulti
-          onChange={handleChange}
+          onChange={handleFriendSelectChange}
         />
         <button className='trip-submit-btn' id='blue-btn' type='submit'>Create Trip</button>
       </form>

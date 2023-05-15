@@ -1,14 +1,16 @@
-// usePlacesPhoto.js
+
 import { useState, useEffect } from 'react';
 
 const usePlacesPhoto = (place, placesApiKey) => {
   const [photoUrl, setPhotoUrl] = useState(null);
   const [service, setService] = useState(null);
+  const [isServiceReady, setIsServiceReady] = useState(false);
 
   useEffect(() => {
     if (window.google) {
       setService(new window.google.maps.places.PlacesService(document.createElement('div')));
-    }
+      setIsServiceReady(true);
+    } 
   }, []);
 
   const getPlacesData = (place) => {
@@ -46,7 +48,7 @@ const usePlacesPhoto = (place, placesApiKey) => {
     }
   };
 
-  return { photoUrl, fetchPhoto };
+  return { photoUrl, fetchPhoto, isServiceReady };
 };
 
 export default usePlacesPhoto;
