@@ -8,6 +8,7 @@ import { IUser } from '../../interfaces/userInterface';
 import { createTrip } from '../../services/tripService';
 import { getAllUsers } from '../../services/userService';
 import useGoogleAutocomplete from '../../hooks/useGoogleAutoComplete';
+import { useMutation } from '@tanstack/react-query';
 
 const CreateTrip: React.FC = () => {
   const initialFormState = {
@@ -27,6 +28,16 @@ const CreateTrip: React.FC = () => {
 
 
   const navigate = useNavigate();
+
+  const createTripMutation = useMutation(createTrip, {
+    onSuccess: () => {
+      resetForm();
+      navigate('/dashboard');
+    },
+    onError: (error) => {
+      console.error(error);
+    }
+  })
 
   const { predictions: autocompletePredictions } = useGoogleAutocomplete(destinationSearchQuery);
   useEffect(() => {
@@ -106,9 +117,7 @@ const CreateTrip: React.FC = () => {
         travelers: allUserIds,
       }
       console.log(formData);
-      await createTrip(formData);
-      resetForm();
-      navigate('/dashboard');
+      createTripMutation.mutate(formData);
     } catch (error) {
       console.error(error);
     }
