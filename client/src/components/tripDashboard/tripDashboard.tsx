@@ -11,6 +11,7 @@ import usePlacesPhoto from '../../hooks/usePlacesPhoto';
 import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { formatDuration } from '../../utils/helperFunctions';
 
 const TripDashboard: React.FC = () => {
   const { fetchPhoto, isServiceReady } = usePlacesPhoto(process.env.REACT_APP_PLACES_KEY);
@@ -18,11 +19,13 @@ const TripDashboard: React.FC = () => {
   const location = useLocation();
   const photoUrl = location.state.photoUrl;
 
-  function formatDuration(durationInMinutes: number) {
-    const hours = Math.floor(durationInMinutes / 60);
-    const minutes = durationInMinutes % 60;
-    return `${hours}h ${minutes}m`;
-  }
+  useEffect(() => {
+    const socket = io('http://localhost:3001');
+    socket.on('trip_update', fetchTrip);
+    fetchTrip();
+
+    return () => {socket.disconnect();};
+  }, [])
 
   const fetchTrip = async () => {
     try {
@@ -41,7 +44,6 @@ const TripDashboard: React.FC = () => {
       }
     } catch (error) {
       console.error('Error in fetching trips', error);
-      // throw error;
     }
   }
 
@@ -53,6 +55,7 @@ const TripDashboard: React.FC = () => {
 
   if (tripQuery.isLoading) return <h1>TripQuery Loading...</h1>
   const { trip, flights, stays, activities } = tripQuery.data || {};
+
   
   return (
     <div>

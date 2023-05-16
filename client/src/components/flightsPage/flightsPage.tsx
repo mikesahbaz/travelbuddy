@@ -18,7 +18,6 @@ const FlightsPage: React.FC = () => {
   const [returnDate, setReturnDate] = useState('');
   const [startDestCode, setStartDestCode] = useState('');
   const [endDestCode, setEndDestCode] = useState('');
-  // const [flightData, setFlightData] = useState<any[] | null>(null);
   const [startData, setStartData] = useState<any>({ data: []});
   const [endData, setEndData] = useState<any>({ data: []});
   const [isLoading, setIsLoading] = useState(false);
