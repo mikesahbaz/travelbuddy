@@ -7,6 +7,8 @@ import { isTrip } from '../../interfaces/tripInterface';
 import { useNavigate } from 'react-router-dom';
 import { GoogleMapsApiContext } from '../../contexts/GoogleMapsApiContext';
 import { getAllTripsByUserEmail } from '../../services/tripService';
+import { useQuery } from '@tanstack/react-query';
+
 const placesApiKey = process.env.REACT_APP_PLACES_KEY;
 let service: any;
 
@@ -23,7 +25,7 @@ const MainDashboard: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [userLoaded, setUserLoaded] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>('');
-  const [trips, setTrips] = useState<isTrip[]>([]);
+  // const [trips, setTrips] = useState<isTrip[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -75,12 +77,27 @@ const MainDashboard: React.FC = () => {
         console.log(trip);
       }
       
-      setTrips(data.trips);
+      return data.trips;
   
     } catch (error) {
       console.error(error);
+      return [];
     }
   }
+
+  const allTripsQuery = useQuery(
+    ['allTrips', userEmail],
+    async () => {
+      if (userEmail) {
+        return await fetchAllTrips(userEmail);
+      } else {
+        return Promise.resolve([]);
+      }
+    },
+    {enabled: isLoaded }
+  )
+
+  const trips = allTripsQuery.data || [];
 
   
 
@@ -128,7 +145,7 @@ const MainDashboard: React.FC = () => {
           </div>
           <button className='create-trip-btn' onClick={handleCreateTripClick}>Plan a trip</button>
         </div>
-        {trips && trips.map( (trip) => (
+        {trips && trips.map( (trip: any) => (
           <div key={trip._id} className='trip-item' onClick={ () => handleTripClick(trip._id, trip.photoUrl)}>
             <div className='trip-item-details'>
               <div className='trip-info-container'>

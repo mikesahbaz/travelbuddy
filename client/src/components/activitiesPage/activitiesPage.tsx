@@ -87,7 +87,7 @@ const ActivitiesPage: React.FC = () => {
 
   const activityQuery = useQuery(
     ['activities', formState.city],
-    async () => fetchActivities({ city: formState.city }),
+    async () => await fetchActivities({ city: formState.city }),
     { enabled: false }
 
   );
