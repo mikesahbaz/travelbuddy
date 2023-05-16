@@ -7,6 +7,8 @@ import { useParams } from 'react-router';
 import { toggleFavoriteFlight } from '../../services/flightService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {useQuery, useMutation } from '@tanstack/react-query';
+import { formatDuration, timeToMinutes, formatDate } from '../../utils/helperFunctions';
 
 
 const FlightsPage: React.FC = () => {
@@ -21,30 +23,6 @@ const FlightsPage: React.FC = () => {
   const [endData, setEndData] = useState<any>({ data: []});
   const [isLoading, setIsLoading] = useState(false);
   const { tripId } = useParams();
-
-  function formatDuration(durationInMinutes: number) {
-    const hours = Math.floor(durationInMinutes / 60);
-    const minutes = durationInMinutes % 60;
-    return `${hours}h ${minutes}m`;
-  }
-
-  function timeToMinutes(timeString: string): number {
-    const timeParts = timeString.split(":");
-    const hours = parseInt(timeParts[0], 10);
-    const minutes = parseInt(timeParts[1], 10);
-
-    return hours * 60 + minutes;
-  }
-
-  function formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const isoDate = date.toISOString();
-    const year = isoDate.slice(2, 4);
-    const month = isoDate.slice(5, 7);
-    const day = isoDate.slice(8, 10);
-
-    return `${year}${month}${day}`;
-  }
 
   const handleBookingClick = (startPlaceId: string, endPlaceId: string, departureTime: number, returnTime: number) => {
     window.open(`https://www.skyscanner.com/transport/flights/${startPlaceId}/${endPlaceId}/${formatDate(startDate)}/${formatDate(returnDate)}/?adultsv2=1&cabinclass=economy&childrenv2=&departure-times=${departureTime}-${departureTime + 30},${returnTime}-${returnTime + 30}`)
@@ -76,8 +54,7 @@ const FlightsPage: React.FC = () => {
     }
   }
 
-  const handleSubmitFlightSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const fetchFlights = async ({startDest, endDest, startDate, returnDate}: any) => {
     setIsLoading(true);
 
     const url = 'https://skyscanner50.p.rapidapi.com/api/v1/searchAirport?query=';
@@ -91,28 +68,18 @@ const FlightsPage: React.FC = () => {
     try {
     const startResponse = await fetch(url + startDest, options);
     const startData = await startResponse.json();
-    setStartData(startData);
-    console.log(startData);
-    setEndDestCode(startData[0]?.PlaceId);
-    console.log(startDestCode);
-
 
     const endResponse = await fetch(url + endDest, options);
     const endData = await endResponse.json();
-    setEndData(endData);
-    console.log(endData);
-    setEndDestCode(endData[0]?.PlaceId);
-
 
     if (startData.data[0]?.PlaceId && endData.data[0]?.PlaceId) {
       const flightSearchUrl = `https://skyscanner50.p.rapidapi.com/api/v1/searchFlights?origin=${startData.data[0]?.PlaceId}&destination=${endData.data[0]?.PlaceId}&date=${startDate}&returnDate=${returnDate}&adults=1&currency=USD`
-      console.log('Flight Search URL : ', flightSearchUrl);
+
       const flightRes = await fetch(flightSearchUrl, options);
       const flightData = await flightRes.json();
-      console.log('Flight data: ', flightData);
 
-      setFlightData(flightData.data.slice(0, 20));
       setIsLoading(false);
+      return flightData.data.slice(0, 20)
     } else {
       console.log('CODES ARE NOT SET');
     }
@@ -123,10 +90,24 @@ const FlightsPage: React.FC = () => {
 
   };
 
-  useEffect(() => {
-    console.log('startDestCode:', startDestCode);
-    console.log('endDestCode:', endDestCode);
-  }, [startDestCode, endDestCode]);
+  const flightQuery = useQuery({
+    queryKey: ['flights'],
+    queryFn: () => fetchFlights,
+  })
+
+  const flightMutation = useMutation(fetchFlights, {
+    onSuccess: (data) => {
+      setFlightData(data);
+    },
+    onError: (error) => {
+      console.error(error);
+    }
+  });
+
+  const handleSubmitFlightSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    flightMutation.mutate({startDest, endDest, startDate, returnDate});
+  }
   
 
   return (
