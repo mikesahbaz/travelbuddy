@@ -9,6 +9,7 @@ import { toggleFavoriteActivity } from '../../services/activityService';
 import usePlacesPhoto from '../../hooks/usePlacesPhoto';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
 const ActivitiesPage: React.FC = () => {
   const { fetchPhoto } = usePlacesPhoto(process.env.REACT_APP_PLACES_KEY);
@@ -17,7 +18,7 @@ const ActivitiesPage: React.FC = () => {
     city: ''
   };
   const [formState, setFormState] = useState(initialFormState);
-  const [activitiesData, setActivitiesData] = useState<any[] | null>(null);
+  // const [activitiesData, setActivitiesData] = useState<any[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { tripId } = useParams();
 
@@ -38,8 +39,7 @@ const ActivitiesPage: React.FC = () => {
     setFormState((prevState) => ({...prevState, [e.target.name]: e.target.value}));
   };
 
-  const handleSubmitActivitySearch = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const fetchActivities = async ({ city }: any) => {
     setIsLoading(true);
     const data_SearchPlace = await SearchPlace_SkyScanner(formState.city);
     const entityId = data_SearchPlace.data[0].entityId;
@@ -54,8 +54,8 @@ const ActivitiesPage: React.FC = () => {
       return { ...activity, photoUrl };
     }));
     console.log(activitiesWithPhotos);
-    setActivitiesData(activitiesWithPhotos.slice(0, 10));
     setIsLoading(false);
+    return activitiesWithPhotos.slice(0, 10);
   };
 
   const handleFavoriteClick = async (activity: any) => {
@@ -85,6 +85,20 @@ const ActivitiesPage: React.FC = () => {
     }
   }
 
+  const activityQuery = useQuery(
+    ['activities', formState.city],
+    async () => fetchActivities({ city: formState.city }),
+    { enabled: false }
+
+  );
+
+  const handleSubmitActivitySearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    activityQuery.refetch();
+  }
+
+  const activitiesData = activityQuery.data || [];
+
   return (
     <div className='activity-page-container'>
       <ToastContainer />
@@ -104,7 +118,7 @@ const ActivitiesPage: React.FC = () => {
 
       <div className='activity-data'>
         {isLoading && <div>Searching for activities...</div>}
-        {activitiesData && activitiesData.map( (activity) => (
+        {activitiesData && activitiesData.map( (activity: any) => (
           <div className='activity-item' key={activity.entityId}>
             {activity.photoUrl && <img src={activity.photoUrl} alt={activity.poiName} className='activity-photo' />}
             <div className='main-activity-content'>
