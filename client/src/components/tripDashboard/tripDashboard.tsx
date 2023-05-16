@@ -10,22 +10,17 @@ import { Carousel } from 'react-responsive-carousel';
 import usePlacesPhoto from '../../hooks/usePlacesPhoto';
 import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import { formatDuration } from '../../utils/helperFunctions';
 
+
 const TripDashboard: React.FC = () => {
+  const queryClient = useQueryClient();
   const { fetchPhoto, isServiceReady } = usePlacesPhoto(process.env.REACT_APP_PLACES_KEY);
   const { tripId } = useParams();
   const location = useLocation();
   const photoUrl = location.state.photoUrl;
 
-  useEffect(() => {
-    const socket = io('http://localhost:3001');
-    socket.on('trip_update', fetchTrip);
-    fetchTrip();
-
-    return () => {socket.disconnect();};
-  }, [])
 
   const fetchTrip = async () => {
     try {
@@ -46,6 +41,15 @@ const TripDashboard: React.FC = () => {
       console.error('Error in fetching trips', error);
     }
   }
+  useEffect(() => {
+    const socket = io('http://localhost:3001');
+    socket.on('trip_update', () => {
+      queryClient.invalidateQueries();
+    });
+    fetchTrip();
+
+    return () => {socket.disconnect();};
+  }, [])
 
   const tripQuery = useQuery({
     queryKey: ["trips"],
@@ -53,7 +57,7 @@ const TripDashboard: React.FC = () => {
     enabled: isServiceReady,
   })
 
-  if (tripQuery.isLoading) return <h1>TripQuery Loading...</h1>
+  if (tripQuery.isLoading) return <h1>Loading...</h1>
   const { trip, flights, stays, activities } = tripQuery.data || {};
 
   
