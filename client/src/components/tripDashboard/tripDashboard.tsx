@@ -10,14 +10,15 @@ import { Carousel } from 'react-responsive-carousel';
 import usePlacesPhoto from '../../hooks/usePlacesPhoto';
 import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
 const TripDashboard: React.FC = () => {
   const { fetchPhoto, isServiceReady } = usePlacesPhoto(process.env.REACT_APP_PLACES_KEY);
   const { tripId } = useParams();
-  const [trip, setTrip] = useState<any>([]);
-  const [flights, setFlights] = useState<any[]>([]);
-  const [stays, setStays] = useState<any[]>([]);
-  const [activities, setActivities] = useState<any[]>([]);
+  // const [trip, setTrip] = useState<any>([]);
+  // const [flights, setFlights] = useState<any[]>([]);
+  // const [stays, setStays] = useState<any[]>([]);
+  // const [activities, setActivities] = useState<any[]>([]);
   const location = useLocation();
   const photoUrl = location.state.photoUrl;
 
@@ -26,6 +27,30 @@ const TripDashboard: React.FC = () => {
     const minutes = durationInMinutes % 60;
     return `${hours}h ${minutes}m`;
   }
+
+  
+  // const fetchTrip = async () => {
+  //   try {
+  //     const res = await fetch(`http://localhost:3001/trips/trip/${tripId}`);
+  //     const data = await res.json();
+  //     if (res.ok) {
+  //       const tripWithPhoto = {...data.trip, photoUrl};
+  //       console.log(tripWithPhoto.startDate);
+  //       const activitiesWithPhotos = await Promise.all(data.trip.activities.map(async (activity: any) => {
+  //         const photoUrl = await fetchPhoto(activity.poiName);
+  //         return { ...activity, photoUrl };
+  //       }));
+  //       setTrip(tripWithPhoto);
+  //       setFlights(data.trip.flights);
+  //       setStays(data.trip.stays);
+  //       setActivities(activitiesWithPhotos);
+  //     } else {
+  //       console.error('Res was not okay, error fetch trips');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error in fetching trips', error);
+  //   }
+  // }
 
   const fetchTrip = async () => {
     try {
@@ -38,26 +63,44 @@ const TripDashboard: React.FC = () => {
           const photoUrl = await fetchPhoto(activity.poiName);
           return { ...activity, photoUrl };
         }));
-        setTrip(tripWithPhoto);
-        setFlights(data.trip.flights);
-        setStays(data.trip.stays);
-        setActivities(activitiesWithPhotos);
+        return {trip: tripWithPhoto, flights: data.trip.flights, stays: data.trip.stays, activities: activitiesWithPhotos};
       } else {
         console.error('Res was not okay, error fetch trips');
       }
     } catch (error) {
       console.error('Error in fetching trips', error);
+      // throw error;
     }
   }
+  
+  // useEffect(() => {
+  //   const socket = io('http://localhost:3001');
+  //   socket.on('trip_update', fetchTrip);
+  //   if (isServiceReady) {
+  //     fetchTrip();
+  //   }
+  //   return () => {socket.disconnect();};
+  // }, [isServiceReady]);
+  
+  // const tripQuery = useQuery(["trips", "trip", tripId], fetchTrip, {
+  //   enabled: isServiceReady,
+  //   retry: false,
+  //   refetchOnWindowFocus: false,
+  // })
 
-  useEffect(() => {
-    const socket = io('http://localhost:3001');
-    socket.on('trip_update', fetchTrip);
-    if (isServiceReady) {
-      fetchTrip();
-    }
-    return () => {socket.disconnect();};
-  }, [isServiceReady]);
+  const tripQuery = useQuery({
+    queryKey: ["trips"],
+    queryFn: () => fetchTrip(),
+    enabled: isServiceReady,
+  })
+
+  console.log(tripQuery.data);
+  if (tripQuery.isLoading) return <h1>TripQuery Loading...</h1>
+  const { trip, flights, stays, activities } = tripQuery.data || {};
+  
+
+
+  
 
   return (
     <div>
@@ -80,7 +123,7 @@ const TripDashboard: React.FC = () => {
             <h2>Favorite Flights</h2>
           </div>
           <div className='flights'>
-          {flights && flights.map( (flight) => (
+          {flights && flights.map( (flight: any) => (
               <div className='flight-item-dash' key={flight.id}>
                 <div className='flight-legs'>
                   {flight.legs.map((leg: any, index: any) => (
@@ -112,7 +155,7 @@ const TripDashboard: React.FC = () => {
               </div>
           </div>
           <div className='stays'>
-              {stays && stays.map( (stay) => (
+              {stays && stays.map( (stay: any) => (
                 <div className='stay-item' key={stay._id}>
                   <img src={stay.images[0]} alt='stay'/>
                   <div className='stay-details'>
