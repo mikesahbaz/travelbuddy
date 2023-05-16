@@ -18,7 +18,7 @@ const FlightsPage: React.FC = () => {
   const [returnDate, setReturnDate] = useState('');
   const [startDestCode, setStartDestCode] = useState('');
   const [endDestCode, setEndDestCode] = useState('');
-  const [flightData, setFlightData] = useState<any[] | null>(null);
+  // const [flightData, setFlightData] = useState<any[] | null>(null);
   const [startData, setStartData] = useState<any>({ data: []});
   const [endData, setEndData] = useState<any>({ data: []});
   const [isLoading, setIsLoading] = useState(false);
@@ -79,37 +79,33 @@ const FlightsPage: React.FC = () => {
 
       const flightRes = await fetch(flightSearchUrl, options);
       const flightData = await flightRes.json();
-
       setIsLoading(false);
       return flightData.data.slice(0, 20)
     } else {
       console.log('CODES ARE NOT SET');
+      return [];
     }
-
   } catch (error) {
     console.error('error fetching the airport codes', error);
+    return [];
   }
-
   };
 
-  const flightQuery = useQuery({
-    queryKey: ['flights'],
-    queryFn: () => fetchFlights,
-  })
-
-  const flightMutation = useMutation(fetchFlights, {
-    onSuccess: (data) => {
-      setFlightData(data);
+  const flightQuery = useQuery(
+    ['flights', { startDest, endDest, startDate, returnDate}],
+    async ({ queryKey }) => {
+      const [, params] = queryKey;
+      return await fetchFlights(params);
     },
-    onError: (error) => {
-      console.error(error);
-    }
-  });
+    { enabled: false },
+  )
 
   const handleSubmitFlightSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    flightMutation.mutate({startDest, endDest, startDate, returnDate});
+    flightQuery.refetch();
   }
+
+  const flightData = flightQuery.data || [];
   
 
   return (
@@ -155,7 +151,7 @@ const FlightsPage: React.FC = () => {
 
       <div className='flight-data'>
         {isLoading && <div>Searching for flights...</div>}
-      {flightData && flightData.map( (flight) => (
+      {flightData && flightData.map( (flight: any) => (
         <div key={flight.id} className='flight-item'>
           <div className='main-flight-content'>
             <h2 className='flight-carrier'>{flight.legs[0].carriers[0].name}</h2>
