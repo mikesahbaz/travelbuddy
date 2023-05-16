@@ -68,9 +68,11 @@ const FlightsPage: React.FC = () => {
     try {
     const startResponse = await fetch(url + startDest, options);
     const startData = await startResponse.json();
+    setStartData(startData);
 
     const endResponse = await fetch(url + endDest, options);
     const endData = await endResponse.json();
+    setEndData(endData);
 
     if (startData.data[0]?.PlaceId && endData.data[0]?.PlaceId) {
       const flightSearchUrl = `https://skyscanner50.p.rapidapi.com/api/v1/searchFlights?origin=${startData.data[0]?.PlaceId}&destination=${endData.data[0]?.PlaceId}&date=${startDate}&returnDate=${returnDate}&adults=1&currency=USD`

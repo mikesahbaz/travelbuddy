@@ -8,6 +8,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { toggleFavoriteStay } from '../../services/stayService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
 const AirbnbsPage: React.FC = () => {
   const [destination, setDestination] = useState('');
@@ -18,7 +19,7 @@ const AirbnbsPage: React.FC = () => {
   const [guests, setGuests] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [idData, setIdData] = useState<any>({ data: []});
-  const [airbnbData, setAirbnbData] = useState<any[] | null>(null);
+  // const [airbnbData, setAirbnbData] = useState<any[] | null>(null);
   const { tripId } = useParams();
 
   const handleFavoriteClick = async (airbnb: any) => {
@@ -51,8 +52,7 @@ const AirbnbsPage: React.FC = () => {
     }
   }
 
-  const handleSubmitSearchForm = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const fetchStays = async ({destination, checkIn, checkOut, priceMin, priceMax, guests}: any) => {
     setIsLoading(true);
 
     const url = `https://airbnb19.p.rapidapi.com/api/v1/searchDestination?query=`;
@@ -76,18 +76,34 @@ const AirbnbsPage: React.FC = () => {
         const airbnbRes = await fetch(airbnbSearchUrl, options);
         const airbnbData = await airbnbRes.json();
         console.log(airbnbData);
-        setAirbnbData(airbnbData.data);
         setIsLoading(false);
+        return airbnbData.data || [];
 
       } else {
         console.log('ID IS NOT SET');
+        return [];
       }
     } catch (error) {
       console.error('Error fetching airbnb data', error);
+      return [];
     }
-
-
   }
+
+  const airbnbQuery = useQuery(
+    ['airbnbs', { destination, checkIn, checkOut, priceMin, priceMax, guests }],
+    async ({ queryKey }) => {
+      const [, params] = queryKey;
+      return await fetchStays(params);
+    },
+    {enabled: false }
+  );
+
+  const handleSubmitSearchForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    airbnbQuery.refetch();
+  }
+  
+  const airbnbData = airbnbQuery.data || [];
 
   return (
     <div>
@@ -124,7 +140,7 @@ const AirbnbsPage: React.FC = () => {
     </div>
       <div className='stays-data'>
         {isLoading && <div>Searching for stays...</div>}
-        {airbnbData && airbnbData.map( (airbnb) => (
+        {airbnbData && airbnbData.map( (airbnb: any) => (
           <div className='airbnb-item' key={airbnb.id}>
             <div className='favorite-button' onClick={() => handleFavoriteClick(airbnb)}>
               <FaHeart />
@@ -137,7 +153,7 @@ const AirbnbsPage: React.FC = () => {
               ))}
             </Carousel>
             <h2>{airbnb.listingName}</h2>
-            <p><FaStar className='rating-star'/> {airbnb.avgRating}</p>
+            {airbnb.avgRating !== null && <p><FaStar className='rating-star'/> {airbnb.avgRating}</p>}
             <p>{airbnb.publicAddress}</p>
             <p>{airbnb.listingBedLabel} - {airbnb.listingBathroomLabel} - {airbnb.listingGuestLabel}</p>
             <p>{airbnb.price} per night</p>
