@@ -37,7 +37,7 @@
 
 .search-form button {
   padding: 10px;
-  background-color: #4caf50;
+  background-color: #0563c8;
   color: white;
   border: none;
   border-radius: 5px;
@@ -46,7 +46,7 @@
 }
 
 .search-form button:hover {
-  background-color: #43a047;
+  background-color: #014b9a;
 }
 
 .activity-data {

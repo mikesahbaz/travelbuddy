@@ -157,7 +157,7 @@ const FlightsPage: React.FC = () => {
             <h2 className='flight-carrier'>{flight.legs[0].carriers[0].name}</h2>
             <div className='flight-details-top'>
               <div className='flight-origin-and-time'>
-                <h2>{new Date(flight.legs[0].departure).toLocaleTimeString()}</h2>
+                <h2>{new Date(flight.legs[0].departure).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</h2>
                 <h2>{flight.legs[0].origin.display_code}</h2>
               </div>
               <div className='flight-duration-and-arrow'>
@@ -165,13 +165,13 @@ const FlightsPage: React.FC = () => {
                 <FaArrowRight className='arrow-right'/>
               </div>
               <div className='flight-destination-and-time'>
-                <h2>{new Date(flight.legs[0].arrival).toLocaleTimeString()}</h2>
+                <h2>{new Date(flight.legs[0].arrival).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</h2>
                 <h2>{flight.legs[0].destination.display_code}</h2>
               </div>
             </div>
             <div className='flight-details-bottom'>
               <div className='flight-origin-and-time'>
-                <h2>{new Date(flight.legs[1].departure).toLocaleTimeString()}</h2>
+                <h2>{new Date(flight.legs[1].departure).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</h2>
                 <h2>{flight.legs[1].origin.display_code}</h2>
               </div>
               <div className='flight-duration-and-arrow'>
@@ -179,14 +179,14 @@ const FlightsPage: React.FC = () => {
                 <FaArrowLeft className='arrow-left'/>
               </div>
               <div className='flight-destination-and-time'>
-                <h2>{new Date(flight.legs[1].arrival).toLocaleTimeString()}</h2>
+                <h2>{new Date(flight.legs[1].arrival).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</h2>
                 <h2>{flight.legs[1].destination.display_code}</h2>
               </div>
             </div>
           </div>
           <div className='right-flight-container'>
             <FaHeart className='favorite-button' onClick={() => handleFavoriteClick(flight)} />
-            <h1>${flight.price.amount}</h1>
+            <h1 className='flight-price-amount'>${flight.price.amount}</h1>
             <button className='visit-flight-btn' onClick={() => handleBookingClick(
               startData.data[0]?.PlaceId,
               endData.data[0]?.PlaceId,
