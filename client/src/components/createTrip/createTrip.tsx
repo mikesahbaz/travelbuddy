@@ -49,7 +49,7 @@ const CreateTrip: React.FC = () => {
     setFormState((prevState) => ({...prevState, [e.target.name]: e.target.value}));
     if (e.target.name === 'tripName') {
      setDestinationSearchQuery(e.target.value);
-     setSelected(false);
+     setSelected(true);
     }
   }
 
@@ -131,6 +131,7 @@ const CreateTrip: React.FC = () => {
     <div className='create-trip-container'>
       <h1>Plan a new trip! </h1>
       <form className='create-trip-form' onSubmit={handleSubmitCreateTrip}>
+        <div style={{ position: 'relative' }}>
         <input className='trip-input'
           type='text'
           placeholder='Traveling to...'
@@ -138,18 +139,40 @@ const CreateTrip: React.FC = () => {
           value={formState.tripName}
           onChange={handleInputChange}
           onFocus={() => setSelected(true)}
-          onBlur={() => setSelected(false)}
         />
-        <select className="select-box"
-          value={formState.tripName}
-          name='tripName'
-          onChange={handleInputChange}>
-          {predictions.map((prediction: any) => (
-            <option key={prediction.place_id} value={prediction.description}>
-              {prediction.description}
-            </option>
-          ))}
-        </select>
+            {selected && predictions.length > 0 && (
+            <ul style={{
+              position: 'absolute',
+              backgroundColor: 'white',
+              width: '100%',
+              maxHeight: '200px',
+              overflowY: 'scroll',
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              borderTop: '1px solid #ccc',
+              zIndex: 1000,
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+            }}>
+              {predictions.map((prediction: any) => (
+                <li
+                  key={prediction.place_id}
+                  style={{
+                    padding: '10px',
+                    borderBottom: '1px solid #ccc',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => {
+                    setFormState((prevState) => ({ ...prevState, tripName: prediction.description }));
+                    setSelected(false);
+                  }}
+                >
+                  {prediction.description}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
         <label>Start Date</label>
         <input className='trip-input'
           type='date'
