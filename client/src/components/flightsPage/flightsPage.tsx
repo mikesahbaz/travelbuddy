@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {useQuery, useMutation } from '@tanstack/react-query';
 import { formatDuration, timeToMinutes, formatDate } from '../../utils/helperFunctions';
+import { MdPlace } from 'react-icons/md';
 
 
 const FlightsPage: React.FC = () => {
@@ -112,25 +113,25 @@ const FlightsPage: React.FC = () => {
       <ToastContainer />
       <form onSubmit={handleSubmitFlightSearch} className='search-form'>
         <div>
-        <label>From</label>
+        <MdPlace size={20}/>
         <input
           type="text"
-          placeholder="Start Destination"
+          placeholder="Leaving From"
           value={startDest}
           onChange={(e) => setStartDest(e.target.value)}
         />
         </div>
         <div>
-        <label>To</label>
+        <MdPlace size={20}/>
         <input
           type="text"
-          placeholder="End Destination"
+          placeholder="Going To"
           value={endDest}
           onChange={(e) => setEndDest(e.target.value)}
         />
         </div>
         <div>
-        <label>Depart</label>
+        <label>Departing</label>
         <input
           type="date"
           value={startDate}
@@ -138,14 +139,14 @@ const FlightsPage: React.FC = () => {
         />
         </div>
         <div>
-        <label>Return</label>
+        <label>Returning</label>
         <input
           type="date"
           value={returnDate}
           onChange={(e) => setReturnDate(e.target.value)}
         />
         </div>
-        <button type="submit">Search Flights</button>
+        <button className='search-flights-btn' type="submit">Search Flights</button>
       </form>
 
       <div className='flight-data'>

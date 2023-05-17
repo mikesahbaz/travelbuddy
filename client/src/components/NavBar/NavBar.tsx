@@ -18,9 +18,18 @@ const NavBar: React.FC = () => {
     }
   }
 
+  const handleDashboardClick = async () => {
+    try {
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error navigating to Dashboard', error);
+    }
+  }
+
   return (
     <div className='nav-container'>
       <div className='main-container'>
+        <button className='dashboard-btn' onClick={handleDashboardClick}>Dashboard</button>
       </div>
       <div className='right-nav-container'>
         <button className='logout-btn' onClick={handleLogout} >Log Out</button>

@@ -10,6 +10,7 @@ import usePlacesPhoto from '../../hooks/usePlacesPhoto';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { MdPlace } from 'react-icons/md';
 
 const ActivitiesPage: React.FC = () => {
   const { fetchPhoto } = usePlacesPhoto(process.env.REACT_APP_PLACES_KEY);
@@ -104,16 +105,16 @@ const ActivitiesPage: React.FC = () => {
       <ToastContainer />
       <form onSubmit={handleSubmitActivitySearch} className='search-form'>
         <div>
-          <label>Destination City</label>
+          <MdPlace size={25}/>
           <input
             type="text"
-            placeholder="City"
+            placeholder="Going To"
             name="city"
             value={formState.city}
             onChange={handleInputChange}
           />
         </div>
-        <button type="submit">Search Activities</button>
+        <button type="submit">Search Things To Do</button>
       </form>
 
       <div className='activity-data'>

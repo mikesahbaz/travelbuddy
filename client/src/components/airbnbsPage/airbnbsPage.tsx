@@ -9,6 +9,7 @@ import { toggleFavoriteStay } from '../../services/stayService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { MdPlace } from 'react-icons/md';
 
 const AirbnbsPage: React.FC = () => {
   const [destination, setDestination] = useState('');

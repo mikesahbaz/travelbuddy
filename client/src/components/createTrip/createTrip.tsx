@@ -24,6 +24,7 @@ const CreateTrip: React.FC = () => {
   const [creatorEmail, setCreatorEmail] = useState('');
   const [destinationSearchQuery, setDestinationSearchQuery] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selected, setSelected] = useState(false);
   const [predictions, setPredictions] = useState<any[]>([]);
 
 
@@ -48,6 +49,7 @@ const CreateTrip: React.FC = () => {
     setFormState((prevState) => ({...prevState, [e.target.name]: e.target.value}));
     if (e.target.name === 'tripName') {
      setDestinationSearchQuery(e.target.value);
+     setSelected(false);
     }
   }
 
@@ -135,6 +137,8 @@ const CreateTrip: React.FC = () => {
           name='tripName'
           value={formState.tripName}
           onChange={handleInputChange}
+          onFocus={() => setSelected(true)}
+          onBlur={() => setSelected(false)}
         />
         <select className="select-box"
           value={formState.tripName}

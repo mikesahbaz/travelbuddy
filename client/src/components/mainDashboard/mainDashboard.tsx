@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { GoogleMapsApiContext } from '../../contexts/GoogleMapsApiContext';
 import { getAllTripsByUserEmail } from '../../services/tripService';
 import { useQuery } from '@tanstack/react-query';
+import { all } from 'axios';
 
 const placesApiKey = process.env.REACT_APP_PLACES_KEY;
 let service: any;
@@ -138,13 +139,14 @@ const MainDashboard: React.FC = () => {
     <div>
       <NavBar/>
       <div className='main-dashboard-container'>
-      {user && user.email ? <h1 className='welcome-message'>Welcome back, {user.email}</h1> : <p className='no-user-message'>Please Sign In</p>}
+      {user && user.email ? <h1 className='welcome-message slide-right'>Welcome Back</h1> : <p className='no-user-message'>Please Sign In</p>}
         <div className='info-container'>
           <div className='my-trips'>
             My Trips
           </div>
           <button className='create-trip-btn' onClick={handleCreateTripClick}>Plan a trip</button>
         </div>
+        {allTripsQuery.isLoading && <h1>Your trips are loading...</h1>}
         {trips && trips.map( (trip: any) => (
           <div key={trip._id} className='trip-item' onClick={ () => handleTripClick(trip._id, trip.photoUrl)}>
             <div className='trip-item-details'>
@@ -153,9 +155,11 @@ const MainDashboard: React.FC = () => {
                 <div className='trip-name-container'>Trip to {trip.name}</div>
               </div>
               <div className='trip-date-container'>{formatDate(trip.startDate)} - {formatDate(trip.endDate)}</div>
-              <button data-trip-id={trip._id}  onClick={(e) => handleFlightsClick(trip._id, e)}>Flights Page</button>
-              <button data-trip-id={trip._id}  onClick={(e) => handleStaysClick(trip._id, e)}>Stays</button>
-              <button data-trip-id={trip._id}  onClick={(e) => handleActivitiesClick(trip._id, e)}>Activities</button>
+              <div className='buttons-dash-container'>
+                <button data-trip-id={trip._id}  onClick={(e) => handleFlightsClick(trip._id, e)} className='main-dash-btn'>Flights</button>
+                <button data-trip-id={trip._id}  onClick={(e) => handleStaysClick(trip._id, e)} className='main-dash-btn'>Stays</button>
+                <button data-trip-id={trip._id}  onClick={(e) => handleActivitiesClick(trip._id, e)} className='main-dash-btn'>Things To Do</button>
+              </div>
             </div>
           </div>
         ))}
