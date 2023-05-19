@@ -13,3 +13,5 @@ We host all of your favorite flights, stays, and things to do on a central dashb
 **Back-End:** TypeScript, Express, MongoDB, Mongoose, SocketIO, Jest, Supertest, Joi
 
 **APIs:** Google Places API, RapidAPI (SkyScanner and Airbnb)
+
+**Contributors:** Mike Sahbaz and Giovanni Gonzales
