@@ -1,6 +1,11 @@
 // backend server config
 const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL || 'http://localhost:3001';
 
+// rapid api config
+const RAPID_API_KEY = process.env.REACT_APP_RAPID_API_KEY || '';
+const SKYSCANNER_API_URL = "https://skyscanner50.p.rapidapi.com/api/v1"
+const SKYSCANNER_API_HOST = "skyscanner50.p.rapidapi.com"
+
 // firebase config
 const FIREBASE_API_KEY = process.env.REACT_APP_FIREBASE_API_KEY || '';
 const FIREBASE_AUTH_DOMAIN = process.env.REACT_APP_FIREBASE_AUTH_DOMAIN || '';
@@ -15,6 +20,13 @@ const GOOGLE_PLACES_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY || '';
 export const config = {
   backend: {
     serverURL: BACKEND_SERVER_URL,
+  },
+  rapid: {
+    apiKey: RAPID_API_KEY,
+  },
+  skyscanner: {
+    apiURL: SKYSCANNER_API_URL,
+    apiHost: SKYSCANNER_API_HOST,
   },
   firebase: {
     apiKey: FIREBASE_API_KEY,

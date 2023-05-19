@@ -1,12 +1,14 @@
 import axios from "axios";
 import { config } from "../config/config";
+import { StayForm } from "../interfaces/stayInterface";
 
-export const toggleFavoriteStay = async (tripId: string, stayFormData: any) => {
+// Update a stay (PATCH)
+export const toggleFavoriteStay = async (tripId: string, stayFormData: StayForm) => {
   try {
-    const response = await axios.put(`${config.backend.serverURL}/stays/${tripId}/favorite`, stayFormData);
+    const response = await axios.patch(`${config.backend.serverURL}/stays/${tripId}/favorite`, stayFormData);
     return response.data;
   } catch (error) {
-    console.error('Error in toggling favorite Stay', error);
+    console.error(error);
     throw error;
   }
 }

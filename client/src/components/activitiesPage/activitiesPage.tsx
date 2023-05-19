@@ -61,7 +61,7 @@ const ActivitiesPage: React.FC = () => {
 
   const handleFavoriteClick = async (activity: any) => {
     console.log(activity);
-    const backendFormData = {
+    const activityFormData = {
       entityId: activity.entityId,
       poiName: activity.poiName,
       poiType: activity.poiType,
@@ -70,7 +70,7 @@ const ActivitiesPage: React.FC = () => {
     }
     try {
       if (typeof tripId === 'string') {
-        const data = await toggleFavoriteActivity(tripId, backendFormData);
+        const data = await toggleFavoriteActivity(tripId, activityFormData);
         toast.success('Activity was favorited!', {
           className: 'toast-success',
           position: toast.POSITION.TOP_CENTER

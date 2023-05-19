@@ -3,7 +3,7 @@ import Trip, { ITripModel } from '../models/tripSchema';
 import Activity, { IActivityModel } from '../models/activitySchema';
 import { getIo } from '../socket';
 
-// Update a stay (PUT)
+// Update an activity (PATCH)
 export const toggleActivityInTrip = async (req: Request, res: Response): Promise<void> => {
   try {
     const tripId: string = req.params.tripId;

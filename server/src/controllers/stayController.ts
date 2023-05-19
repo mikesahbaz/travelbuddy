@@ -3,7 +3,7 @@ import Trip, { ITripModel } from '../models/tripSchema';
 import Stay, { IStayModel } from '../models/staySchema';
 import { getIo } from '../socket';
 
-// Update a stay (PUT)
+// Update a stay (PATCH)
 export const toggleStayInTrip = async (req: Request, res: Response): Promise<void> => {
   try {
     const tripId: string = req.params.tripId;

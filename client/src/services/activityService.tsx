@@ -1,9 +1,11 @@
 import axios from "axios";
 import { config } from "../config/config";
+import { ActivityForm } from "../interfaces/activityInterface";
 
-export const toggleFavoriteActivity = async (tripId: string, backendFormData: any) => {
+// Update an activity (PATCH)
+export const toggleFavoriteActivity = async (tripId: string, activityFormData: ActivityForm) => {
   try {
-    const response = await axios.put(`${config.backend.serverURL}/activities/${tripId}/favorite`, backendFormData);
+    const response = await axios.patch(`${config.backend.serverURL}/activities/${tripId}/favorite`, activityFormData);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -14,11 +16,11 @@ export const toggleFavoriteActivity = async (tripId: string, backendFormData: an
 export const SearchPlace_SkyScanner = async (query: string) => {
   const options = {
     method: 'GET',
-    url: 'https://skyscanner50.p.rapidapi.com/api/v1/searchPlace',
+    url: `${config.skyscanner.apiURL}/searchPlace`,
     params: { query: query },
     headers: {
-      'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY as string,
-      'X-RapidAPI-Host': 'skyscanner50.p.rapidapi.com'
+      'X-RapidAPI-Key': config.rapid.apiKey,
+      'X-RapidAPI-Host': config.skyscanner.apiHost
     }
   };
 
@@ -34,15 +36,15 @@ export const SearchPlace_SkyScanner = async (query: string) => {
 export const SearchHotel_SkyScanner = async (entityId: string, checkIn: string, checkOut: string) => {
   const options = {
     method: 'GET',
-    url: 'https://skyscanner50.p.rapidapi.com/api/v1/searchHotel',
+    url: `${config.skyscanner.apiURL}/searchHotel`,
     params: {
       entityId: entityId,
       checkin: checkIn,
       checkout: checkOut
     },
     headers: {
-      'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY as string,
-      'X-RapidAPI-Host': 'skyscanner50.p.rapidapi.com'
+      'X-RapidAPI-Key': config.rapid.apiKey,
+      'X-RapidAPI-Host': config.skyscanner.apiHost
     }
   };
 
@@ -58,15 +60,15 @@ export const SearchHotel_SkyScanner = async (entityId: string, checkIn: string, 
 export const SearchThingToDo_SkyScanner = async (entityId: string, lng: string, lat: string) => {
   const options = {
     method: 'GET',
-    url: 'https://skyscanner50.p.rapidapi.com/api/v1/getThingsToDo',
+    url: `${config.skyscanner.apiURL}/getThingsToDo`,
     params: {
       entityId: entityId,
       lat: lat,
       lng: lng
     },
     headers: {
-      'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY as string,
-      'X-RapidAPI-Host': 'skyscanner50.p.rapidapi.com'
+      'X-RapidAPI-Key': config.rapid.apiKey,
+      'X-RapidAPI-Host': config.skyscanner.apiHost
     }
   };
 

@@ -2,9 +2,10 @@ import axios from "axios";
 import { config } from "../config/config";
 import { TripForm } from "../interfaces/tripInterface";
 
-export const getAllTripsByUserEmail = async (userEmail: string) => {
+// Create a trip (POST)
+export const createTrip = async (formData: TripForm) => {
   try {
-    const response = await axios.get(`${config.backend.serverURL}/trips/mytrips/${userEmail}`);
+    const response = await axios.post(`${config.backend.serverURL}/trips/create`, formData);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -12,6 +13,7 @@ export const getAllTripsByUserEmail = async (userEmail: string) => {
   }
 }
 
+// Get trip by TripID (GET)
 export const getAllTripsByUserId = async (userId: string) => {
   try {
     const response = await axios.get(`${config.backend.serverURL}/trips/tripsbyuserid/${userId}`);
@@ -22,9 +24,10 @@ export const getAllTripsByUserId = async (userId: string) => {
   }
 }
 
-export const createTrip = async (formData: TripForm) => {
+// Get all trips by userEmail (GET)
+export const getAllTripsByUserEmail = async (userEmail: string) => {
   try {
-    const response = await axios.post(`${config.backend.serverURL}/trips/create`, formData);
+    const response = await axios.get(`${config.backend.serverURL}/trips/mytrips/${userEmail}`);
     return response.data;
   } catch (error) {
     console.error(error);

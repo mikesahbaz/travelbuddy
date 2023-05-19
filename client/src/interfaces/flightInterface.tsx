@@ -1,6 +1,12 @@
+export interface FlightForm {
+  itineraryId: string,
+  price: number,
+  legs: [Leg]
+}
+
 export interface IFlight {
   itineraryId: string;
-  price: Price;
+  price: number;
   legs: [Leg];
 }
 
@@ -17,8 +23,4 @@ export interface Leg {
   departure: Date;
   arrival: Date;
   duration: Number;
-}
-
-export interface Price {
-  amount: Number;
 }

@@ -3,7 +3,7 @@ import Flight, { IFlightModel } from '../models/flightSchema';
 import Trip, { ITripModel } from '../models/tripSchema';
 import { getIo } from '../socket';
 
-// Update a flight (PUT)
+// Update a flight (PATCH)
 export const toggleFlightInTrip = async (req: Request, res: Response): Promise<void> => {
   try {
     const tripId: string = req.params.tripId;
