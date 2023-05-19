@@ -1,3 +1,6 @@
+// backend server config
+const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL || 'http://localhost:3001';
+
 // firebase config
 const FIREBASE_API_KEY = process.env.REACT_APP_FIREBASE_API_KEY || '';
 const FIREBASE_AUTH_DOMAIN = process.env.REACT_APP_FIREBASE_AUTH_DOMAIN || '';
@@ -10,6 +13,9 @@ const FIREBASE_APP_ID = process.env.REACT_APP_FIREBASE_APP_ID || '';
 const GOOGLE_PLACES_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY || '';
 
 export const config = {
+  backend: {
+    serverURL: BACKEND_SERVER_URL,
+  },
   firebase: {
     apiKey: FIREBASE_API_KEY,
     authDomain: FIREBASE_AUTH_DOMAIN,

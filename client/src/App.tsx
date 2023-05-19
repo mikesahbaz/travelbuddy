@@ -31,7 +31,7 @@ function App() {
     <GoogleMapsApiContext.Provider value={{ isLoaded }}>
       <Router>
         <div className="App">
-        <Routes>
+          <Routes>
             <Route path='/' element={<RegisterPage />} />
             <Route path='/login' element={<LoginPage />} />
             <Route path='/dashboard' element={<MainDashboard />} />

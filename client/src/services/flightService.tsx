@@ -1,9 +1,9 @@
 import axios from "axios";
-import { ILeg } from "../interfaces/tripInterface";
+import { config } from "../config/config";
 
 export const toggleFavoriteFlight = async (tripId: string, flightFormData: any) => {
   try {
-    const response = await axios.put(`http://localhost:3001/flights/${tripId}/favorite`, flightFormData);
+    const response = await axios.put(`${config.backend.serverURL}/flights/${tripId}/favorite`, flightFormData);
     return response.data;
   } catch (error) {
     console.error(error);

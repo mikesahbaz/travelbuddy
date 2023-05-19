@@ -1,9 +1,9 @@
 import axios from "axios";
-import { IActivity } from "../interfaces/tripInterface";
+import { config } from "../config/config";
 
 export const toggleFavoriteActivity = async (tripId: string, backendFormData: any) => {
   try {
-    const response = await axios.put(`http://localhost:3001/activities/${tripId}/favorite`,backendFormData);
+    const response = await axios.put(`${config.backend.serverURL}/activities/${tripId}/favorite`, backendFormData);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -60,7 +60,7 @@ export const SearchThingToDo_SkyScanner = async (entityId: string, lng: string, 
     method: 'GET',
     url: 'https://skyscanner50.p.rapidapi.com/api/v1/getThingsToDo',
     params: {
-      entityId: '27544008',
+      entityId: entityId,
       lat: lat,
       lng: lng
     },
