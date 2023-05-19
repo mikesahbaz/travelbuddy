@@ -1,10 +1,18 @@
 import React from 'react';
-import './NavBar.css';
+import './navBar.css';
 import { useNavigate } from 'react-router-dom';
 import { auth, signOut } from '../../firebase';
 
 const NavBar: React.FC = () => {
   const navigate = useNavigate();
+
+  const handleDashboardClick = async () => {
+    try {
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error navigating to Dashboard', error);
+    }
+  }
 
   const handleLogout = async () => {
     try {
@@ -12,14 +20,6 @@ const NavBar: React.FC = () => {
       navigate('/login');
     } catch (error) {
       console.error('Error signing out: ', error);
-    }
-  }
-
-  const handleDashboardClick = async () => {
-    try {
-      navigate('/dashboard');
-    } catch (error) {
-      console.error('Error navigating to Dashboard', error);
     }
   }
 

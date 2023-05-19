@@ -9,7 +9,7 @@ const LoginPage: React.FC = () => {
     password: ''
   }
   const [formState, setFormState] = useState(initialFormState);
-  const [error, setError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,7 +25,7 @@ const LoginPage: React.FC = () => {
       }
     } catch (error) {
       console.error(error);
-      setError('The email or password you entered was incorrect.');
+      setErrorMessage('The email or password you entered was incorrect.');
     }
   }
 
@@ -50,7 +50,7 @@ const LoginPage: React.FC = () => {
           />
           <button className='submit-btn' id='green-btn' type='submit'>Sign In</button>
         </form>
-        {error && <p id="login-form-error">{error}</p>}
+        {errorMessage && <p id="login-form-error">{errorMessage}</p>}
       </div>
     </div>
   )

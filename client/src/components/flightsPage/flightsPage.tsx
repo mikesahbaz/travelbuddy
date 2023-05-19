@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './flightsPage.css';
-import NavBar from '../NavBar/NavBar';
+import NavBar from '../navBar/navBar';
 import { auth } from '../../firebase';
 import { FaArrowRight, FaArrowLeft, FaHeart } from 'react-icons/fa';
 import { useParams } from 'react-router';

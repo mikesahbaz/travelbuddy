@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './tripDashboard.css';
-import NavBar from '../NavBar/NavBar';
+import NavBar from '../navBar/navBar';
 import { auth } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
@@ -41,7 +41,7 @@ const TripDashboard: React.FC = () => {
       console.error('Error in fetching trips', error);
     }
   }
-  
+
   useEffect(() => {
     const socket = io('http://localhost:3001');
     socket.on('trip_update', () => {

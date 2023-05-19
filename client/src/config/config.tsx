@@ -3,8 +3,8 @@ const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL || 'http://l
 
 // rapid api config
 const RAPID_API_KEY = process.env.REACT_APP_RAPID_API_KEY || '';
-const SKYSCANNER_API_URL = "https://skyscanner50.p.rapidapi.com/api/v1"
-const SKYSCANNER_API_HOST = "skyscanner50.p.rapidapi.com"
+const SKYSCANNER_API_URL = "https://skyscanner50.p.rapidapi.com/api/v1";
+const SKYSCANNER_API_HOST = "skyscanner50.p.rapidapi.com";
 
 // firebase config
 const FIREBASE_API_KEY = process.env.REACT_APP_FIREBASE_API_KEY || '';

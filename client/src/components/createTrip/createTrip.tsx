@@ -3,7 +3,7 @@ import './createTrip.css';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { auth } from '../../firebase';
-import NavBar from '../NavBar/NavBar';
+import NavBar from '../navBar/navBar';
 import { IUser } from '../../interfaces/userInterface';
 import { createTrip } from '../../services/tripService';
 import { getAllUsers } from '../../services/userService';

@@ -1,32 +1,70 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import './mainDashboard.css';
-import NavBar from '../NavBar/NavBar';
+import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { auth } from '../../firebase';
 import { User } from 'firebase/auth';
-import { isTrip } from '../../interfaces/tripInterface';
-import { useNavigate } from 'react-router-dom';
 import { GoogleMapsApiContext } from '../../contexts/GoogleMapsApiContext';
 import { getAllTripsByUserEmail } from '../../services/tripService';
-import { useQuery } from '@tanstack/react-query';
-import { all } from 'axios';
-
-const placesApiKey = process.env.REACT_APP_PLACES_KEY;
-let service: any;
+import { ITrip } from '../../interfaces/tripInterface';
+import NavBar from '../navBar/navBar';
 
 const MainDashboard: React.FC = () => {
-  const { isLoaded } = useContext(GoogleMapsApiContext);
-
-  useEffect(() => {
-    if (isLoaded) {
-      service = new window.google.maps.places.PlacesService(document.createElement('div'));
-    }
-  }, [isLoaded]);
-
   const [user, setUser] = useState<User | null>(null);
+  const [userEmail, setUserEmail] = useState('');
   const [userLoaded, setUserLoaded] = useState(false);
-  const [userEmail, setUserEmail] = useState<string | null>('');
-  // const [trips, setTrips] = useState<isTrip[]>([]);
   const navigate = useNavigate();
+  const { isLoaded } = useContext(GoogleMapsApiContext);
+  const placesServiceRef = useRef<google.maps.places.PlacesService | null>(null);
+
+  const getPlacesData = (place: string): Promise<google.maps.places.PlaceResult[] | null> => {
+    return new Promise((resolve, reject) => {
+      if (!placesServiceRef.current) {
+        reject('Service not available');
+        return;
+      }
+
+      const request = {
+        query: place,
+        fields: ["name", "photos"],
+      };
+
+      placesServiceRef.current.textSearch(request, (results: google.maps.places.PlaceResult[] | null, status: google.maps.places.PlacesServiceStatus) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          resolve(results);
+        } else {
+          reject('Places search failed');
+        }
+      });
+    });
+  };
+
+  const fetchAllTrips = async function (userEmail: string) {
+    try {
+      const data = await getAllTripsByUserEmail(userEmail);
+      const trips: ITrip[] = data.trips;
+
+      // This entire function should probably be moved to createTrip.tsx
+      // That way, when a new trip is created, we don't need to fetch a photoURL here for the trip
+      for (let trip of trips) {
+        const placesData = await getPlacesData(trip.name);
+
+        // Check if placesData and the necessary properties exist
+        if (placesData && placesData[0] && placesData[0].photos && placesData[0].photos[0]) {
+          const photoUrl = placesData[0].photos[0].getUrl({maxWidth: 500, maxHeight: 500});
+          trip.photoUrl = photoUrl;
+        } else {
+          trip.photoUrl = '';
+        }
+      }
+
+      return trips;
+
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged( (user) => {
@@ -40,52 +78,13 @@ const MainDashboard: React.FC = () => {
     return unsubscribe;
   }, [])
 
-  const getPlacesData = (place: string) => {
-    return new Promise((resolve, reject) => {
-      if (!service) {
-        reject('Service not available');
-        return;
-      }
-
-      const request = {
-        query: place,
-        fields: ["name", "photos"],
-      };
-
-      service.textSearch(request, (results: any, status: any) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          resolve(results);
-        } else {
-          reject('Places search failed');
-        }
-      });
-    });
-  };
-
-  const fetchAllTrips = async function (userEmail: string) {
-    try {
-      const data = await getAllTripsByUserEmail(userEmail);
-      const updatedTrips = [];
-
-      for (let trip of data.trips) {
-        const placesData: any = await getPlacesData(trip.name);
-        console.log(placesData[0].photos);
-        const photoUrl = placesData[0].photos[0].getUrl({maxWidth: 500, maxHeight: 500});
-        console.log(photoUrl);
-        trip.photoUrl = photoUrl;
-        updatedTrips.push(trip);
-        console.log(trip);
-      }
-
-      return data.trips;
-
-    } catch (error) {
-      console.error(error);
-      return [];
+  useEffect(() => {
+    if (isLoaded && !placesServiceRef.current) {
+      placesServiceRef.current = new window.google.maps.places.PlacesService(document.createElement('div'));
     }
-  }
+  }, [isLoaded]);
 
-  const allTripsQuery = useQuery(
+  const tripsQuery = useQuery(
     ['allTrips', userEmail],
     async () => {
       if (userEmail) {
@@ -96,8 +95,6 @@ const MainDashboard: React.FC = () => {
     },
     {enabled: isLoaded }
   )
-
-  const trips = allTripsQuery.data || [];
 
   const handleCreateTripClick = () => {
     navigate('/createTrip');
@@ -142,8 +139,8 @@ const MainDashboard: React.FC = () => {
           </div>
           <button className='create-trip-btn' onClick={handleCreateTripClick}>Plan a trip</button>
         </div>
-        {allTripsQuery.isLoading && <h1>Your trips are loading...</h1>}
-        {trips && trips.map( (trip: any) => (
+        {tripsQuery.isLoading && <h1>Your trips are loading...</h1>}
+        {tripsQuery.data && tripsQuery.data.map( (trip: ITrip) => (
           <div key={trip._id} className='trip-item' onClick={ () => handleTripClick(trip._id, trip.photoUrl)}>
             <div className='trip-item-details'>
               <div className='trip-info-container'>

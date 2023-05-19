@@ -9,3 +9,7 @@ export interface StayForm {
   listingGuestLabel: string;
   price: string;
 }
+
+export interface IStay {
+  propertyId: number;
+};

@@ -1,16 +1,16 @@
 export interface FlightForm {
   itineraryId: string,
   price: number,
-  legs: [Leg]
+  legs: [ILeg]
 }
 
 export interface IFlight {
   itineraryId: string;
   price: number;
-  legs: [Leg];
+  legs: [ILeg];
 }
 
-export interface Leg {
+export interface ILeg {
   carrier: {
     name: String;
   };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
-import './airbnbsPage.css';
-import NavBar from '../NavBar/NavBar';
+import './staysPage.css';
+import NavBar from '../navBar/navBar';
 import { Carousel } from 'react-responsive-carousel';
 import { FaHeart, FaStar } from 'react-icons/fa';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { MdPlace } from 'react-icons/md';
 
-const AirbnbsPage: React.FC = () => {
+const StaysPage: React.FC = () => {
   const [destination, setDestination] = useState('');
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
@@ -165,4 +165,4 @@ const AirbnbsPage: React.FC = () => {
   )
 }
 
-export default AirbnbsPage;
+export default StaysPage;

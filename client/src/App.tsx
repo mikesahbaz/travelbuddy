@@ -5,7 +5,7 @@ import MainDashboard from './components/mainDashboard/mainDashboard';
 import CreateTrip from './components/createTrip/createTrip';
 import TripDashboard from './components/tripDashboard/tripDashboard';
 import FlightsPage from './components/flightsPage/flightsPage';
-import AirbnbsPage from './components/airbnbsPage/airbnbsPage';
+import StaysPage from './components/staysPage/staysPage';
 import ActivitiesPage from './components/activitiesPage/activitiesPage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { GoogleMapsApiContext } from './contexts/GoogleMapsApiContext';
@@ -38,7 +38,7 @@ function App() {
             <Route path='/createTrip' element={<CreateTrip />} />
             <Route path='/trips/:tripId' element={<TripDashboard />} />
             <Route path='/flights/:tripId' element={<FlightsPage />} />
-            <Route path='/stays/:tripId' element={<AirbnbsPage />} />
+            <Route path='/stays/:tripId' element={<StaysPage />} />
             <Route path='/activities/:tripId' element={<ActivitiesPage />} />
           </Routes>
         </div>

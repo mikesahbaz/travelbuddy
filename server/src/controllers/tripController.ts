@@ -57,7 +57,6 @@ export const getAllTripsByUserEmail = async (req: Request, res: Response): Promi
       if (trips.length > 0) {
         res.status(200).json({ trips });
       } else {
-        //res.status(404).json({ message: 'No trips exist yet.'});
         res.status(200).json({ trips: [] });
       }
     } else {
