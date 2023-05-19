@@ -22,7 +22,6 @@ const MainDashboard: React.FC = () => {
     }
   }, [isLoaded]);
 
-
   const [user, setUser] = useState<User | null>(null);
   const [userLoaded, setUserLoaded] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>('');
@@ -47,12 +46,12 @@ const MainDashboard: React.FC = () => {
         reject('Service not available');
         return;
       }
-  
+
       const request = {
         query: place,
         fields: ["name", "photos"],
       };
-  
+
       service.textSearch(request, (results: any, status: any) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           resolve(results);
@@ -62,7 +61,7 @@ const MainDashboard: React.FC = () => {
       });
     });
   };
-  
+
   const fetchAllTrips = async function (userEmail: string) {
     try {
       const data = await getAllTripsByUserEmail(userEmail);
@@ -77,9 +76,9 @@ const MainDashboard: React.FC = () => {
         updatedTrips.push(trip);
         console.log(trip);
       }
-      
+
       return data.trips;
-  
+
     } catch (error) {
       console.error(error);
       return [];
@@ -99,8 +98,6 @@ const MainDashboard: React.FC = () => {
   )
 
   const trips = allTripsQuery.data || [];
-
-  
 
   const handleCreateTripClick = () => {
     navigate('/createTrip');
@@ -125,7 +122,6 @@ const MainDashboard: React.FC = () => {
     navigate(`/stays/${tripId}`);
   }
 
-  
   const handleActivitiesClick = (tripId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     navigate(`/activities/${tripId}`);
@@ -167,6 +163,5 @@ const MainDashboard: React.FC = () => {
     </div>
   )
 }
-
 
 export default MainDashboard;

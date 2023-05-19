@@ -11,7 +11,6 @@ import {useQuery, useMutation } from '@tanstack/react-query';
 import { formatDuration, timeToMinutes, formatDate } from '../../utils/helperFunctions';
 import { MdPlace } from 'react-icons/md';
 
-
 const FlightsPage: React.FC = () => {
   const [startDest, setStartDest] = useState('');
   const [endDest, setEndDest] = useState('');
@@ -106,7 +105,6 @@ const FlightsPage: React.FC = () => {
   }
 
   const flightData = flightQuery.data || [];
-  
 
   return (
     <div className='flight-page-container'>
@@ -200,6 +198,5 @@ const FlightsPage: React.FC = () => {
     </div>
   )
 }
-
 
 export default FlightsPage;

@@ -103,7 +103,7 @@ const AirbnbsPage: React.FC = () => {
     e.preventDefault();
     airbnbQuery.refetch();
   }
-  
+
   const airbnbData = airbnbQuery.data || [];
 
   return (

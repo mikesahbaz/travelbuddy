@@ -10,7 +10,7 @@ const usePlacesPhoto = (place, placesApiKey) => {
     if (window.google) {
       setService(new window.google.maps.places.PlacesService(document.createElement('div')));
       setIsServiceReady(true);
-    } 
+    }
   }, []);
 
   const getPlacesData = (place) => {
@@ -34,7 +34,6 @@ const usePlacesPhoto = (place, placesApiKey) => {
       });
     });
   };
-
 
   const fetchPhoto = async (place) => {
     try {

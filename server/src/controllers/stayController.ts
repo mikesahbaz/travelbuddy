@@ -14,7 +14,7 @@ export const toggleStayInTrip = async (req: Request, res: Response): Promise<voi
 
     if (trip) {
       const stayIndex = trip.stays.findIndex((stay) => stay.propertyId === req.body.propertyId);
-      
+
       if (stayIndex > -1) {
         // stay exist, remove it
         trip.stays.splice(stayIndex, 1);
@@ -40,4 +40,3 @@ export const toggleStayInTrip = async (req: Request, res: Response): Promise<voi
     }
   }
 }
-

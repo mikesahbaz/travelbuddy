@@ -27,7 +27,6 @@ const CreateTrip: React.FC = () => {
   const [selected, setSelected] = useState(false);
   const [predictions, setPredictions] = useState<any[]>([]);
 
-
   const navigate = useNavigate();
 
   const createTripMutation = useMutation(createTrip, {

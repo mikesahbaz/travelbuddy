@@ -11,6 +11,4 @@ router.get('/users/:tripId', getAllUsersByTripId);
 router.put('/update/:tripId', updateTrip);
 router.delete('/delete/:tripId', deleteTrip);
 
-
 export default router;
-

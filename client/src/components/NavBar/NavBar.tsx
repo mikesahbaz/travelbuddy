@@ -6,9 +6,6 @@ import { auth, signOut } from '../../firebase';
 const NavBar: React.FC = () => {
   const navigate = useNavigate();
 
-
-
-
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -37,6 +34,5 @@ const NavBar: React.FC = () => {
     </div>
   )
 }
-
 
 export default NavBar;

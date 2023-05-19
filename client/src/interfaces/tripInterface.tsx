@@ -63,7 +63,3 @@ export interface IActivity {
   poiTypeCategory: string;
   poiTypeLocale: string;
 };
-
-// export interface IStay extends Document {
-//   propertyId: number;
-// };

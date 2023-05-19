@@ -41,6 +41,7 @@ const TripDashboard: React.FC = () => {
       console.error('Error in fetching trips', error);
     }
   }
+  
   useEffect(() => {
     const socket = io('http://localhost:3001');
     socket.on('trip_update', () => {
@@ -60,7 +61,6 @@ const TripDashboard: React.FC = () => {
   if (tripQuery.isLoading) return <h1>Loading...</h1>
   const { trip, flights, stays, activities } = tripQuery.data || {};
 
-  
   return (
     <div>
       <NavBar />
